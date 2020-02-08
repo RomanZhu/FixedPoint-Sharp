@@ -150,17 +150,17 @@ namespace ffg
             _100 = parse_int(100);
             _200 = parse_int(200);
 
-            _0_01 = _1 / _100;
+            _0_01 = _1    / _100;
             _0_02 = _0_01 * _2;
             _0_03 = _0_01 * _3;
             _0_04 = _0_01 * _4;
             _0_05 = _0_01 * _5;
 
-            _0_10 = _1 / _10;
-            _0_20 = _1 / _5;
-            _0_25 = _1 / _4;
-            _0_33 = _1 / _3;
-            _0_50 = _1 / _2;
+            _0_10 = _1    / _10;
+            _0_20 = _1    / _5;
+            _0_25 = _1    / _4;
+            _0_33 = _1    / _3;
+            _0_50 = _1    / _2;
             _0_75 = _0_25 * _3;
             _0_95 = _1 - _0_05;
 
@@ -168,7 +168,7 @@ namespace ffg
 
             zero               = new fp(0);
             one                = new fp(fixlut.ONE);
-            two                = one + one;
+            two                = one       + one;
             three              = one + one + one;
             half               = one / two;
             point_one          = new fp(6553L);
@@ -183,8 +183,6 @@ namespace ffg
             pi2     = pi * two;
             deg2rad = new fp(1143L);
             rad2deg = new fp(3754936L);
-//            deg2rad = (pi * two) / Parse(360);
-//            rad2deg = Parse(360) / (pi * two);
             rad_90degrees = pi * half;
             epsilon       = new fp(1);
         }
@@ -336,16 +334,16 @@ namespace ffg
 
         public override string ToString()
         {
-            var v = Math.Abs(value);
-            var s = string.Format("{0}.{1}", v >> fixlut.PRECISION,
-                (v % fixlut.ONE).ToString().PadLeft(FRACTIONS_COUNT, '0'));
-
-            if (value < 0)
-            {
-                return "-" + s;
-            }
-
-            return s;
+            return AsFloat.ToString();
+            // var v = Math.Abs(value);
+            // var s = $"{v >> fixlut.PRECISION}.{(v % fixlut.ONE).ToString().PadLeft(FRACTIONS_COUNT, '0')}";
+            //
+            // if (value < 0)
+            // {
+            //     return "-" + s;
+            // }
+            //
+            // return s;
         }
 
         internal static fp raw_unsafe_int(long value)
