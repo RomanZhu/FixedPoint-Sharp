@@ -1,10 +1,13 @@
-﻿namespace ffg
+﻿namespace FixedPoint
 {
     public static partial class fixlut
     {
+        public const int  FRACTIONS_COUNT = 5;
         public const int  PRECISION = 16;
         public const long PI        = 205887L;
         public const long ONE       = 1 << PRECISION;
+        public const long ZERO      = 0;
+
 
         public static long sqrt_aprox(long value)
         {

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace ffg
+namespace FixedPoint
 {
     public partial struct fixmath
     {
@@ -29,9 +29,9 @@ namespace ffg
         {
             fp3 r;
 
-            r.x.value = ((a.y.value * b.z.value) >> fixlut.PRECISION) - ((a.z.value * b.y.value) >> fixlut.PRECISION);
-            r.y.value = ((a.z.value * b.x.value) >> fixlut.PRECISION) - ((a.x.value * b.z.value) >> fixlut.PRECISION);
-            r.z.value = ((a.x.value * b.y.value) >> fixlut.PRECISION) - ((a.y.value * b.x.value) >> fixlut.PRECISION);
+            r.x = a.y * b.z - a.z * b.y;
+            r.y = a.z * b.x - a.x * b.z;
+            r.z = a.x * b.y - a.y * b.x;
             
             return r;
         }
@@ -63,13 +63,13 @@ namespace ffg
         {
             t = Clamp(t, fp.zero, fp.one);
             
-            return new fp3(LerpUnclamped(from.x, to.x, t), LerpUnclamped(from.y, to.y, t), LerpUnclamped(from.z, to.z, t));
+            return new fp3(Lerp(from.x, to.x, t), Lerp(from.y, to.y, t), Lerp(from.z, to.z, t));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp3 LerpUnclamped(fp3 from, fp3 to, fp t)
         {
-            return new fp3(LerpUnclamped(from.x, to.x, t), LerpUnclamped(from.y, to.y, t), LerpUnclamped(from.z, to.z, t));
+            return new fp3(Lerp(from.x, to.x, t), Lerp(from.y, to.y, t), Lerp(from.z, to.z, t));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -99,14 +99,6 @@ namespace ffg
 
             var dot = Dot(vector, planeNormal);
             return vector - planeNormal * dot / sqrMag;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp3 Scale(fp3 a, fp3 b) {
-            return new fp3(
-                (a.x.value * b.x.value) >> fixlut.PRECISION,
-                (a.x.value * b.x.value) >> fixlut.PRECISION,
-                (a.x.value * b.x.value) >> fixlut.PRECISION);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

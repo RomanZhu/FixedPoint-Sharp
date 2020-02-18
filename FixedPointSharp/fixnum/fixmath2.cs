@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace ffg
+namespace FixedPoint
 {
     public partial struct fixmath
     {
@@ -680,7 +680,7 @@ namespace ffg
             }
 
             var rad  = new fp(fixlut.acos(ret.value));
-            var sign = ((a.x * b.y - a.y * b.x).value < fp.RAW_ZERO) ? fp.minus_one : fp.one;
+            var sign = ((a.x * b.y - a.y * b.x).value <  fixlut.ZERO) ? fp.minus_one : fp.one;
 
             return rad * sign;
         }
@@ -751,7 +751,7 @@ namespace ffg
             }
 
             var rad  = new fp(fixlut.acos(ret.value));
-            var sign = ((a.x * b.y - a.y * b.x).value < fp.RAW_ZERO) ? fp.minus_one : fp.one;
+            var sign = ((a.x * b.y - a.y * b.x).value < fixlut.ZERO) ? fp.minus_one : fp.one;
 
             return rad * sign;
         }
@@ -773,8 +773,8 @@ namespace ffg
         public static fp2 Rotate(fp2 vector, fp angle)
         {
             fp2 vector1 = vector;
-            var cs = Cos(angle);
-            var sn = Sin(angle);
+            var cs = fixmath.Cos(angle);
+            var sn = fixmath.Sin(angle);
 
             var px = (vector1.x * cs) - (vector1.y * sn);
             var pz = (vector1.x * sn) + (vector1.y * cs);

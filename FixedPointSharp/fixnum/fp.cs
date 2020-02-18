@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 
-namespace ffg
+namespace FixedPoint
 {
     [Serializable]
     public struct fp : IEquatable<fp>, IComparable<fp>
     {
+        private const long VISUALIZATION_FACTOR    = 152601;
+        private const long VISUALIZATION_FRACTIONS = 100000;
+
         public class Comparer : IComparer<fp>
         {
             public static readonly Comparer instance = new Comparer();
@@ -38,11 +43,6 @@ namespace ffg
                 return num.value.GetHashCode();
             }
         }
-
-        internal const int FRACTIONS_COUNT = 5;
-
-        internal const long RAW_ZERO = 0;
-        internal const long RAW_ONE  = fixlut.ONE;
 
         public static readonly fp min;
         public static readonly fp max;
@@ -94,61 +94,36 @@ namespace ffg
 
         public long value;
 
-
-        // as long
-        internal long as_long_int => value >> fixlut.PRECISION;
-
-        public long AsLong => as_long_int;
-
-        // as int
-        internal int as_int_int => (int) (value >> fixlut.PRECISION);
-
-        public int AsInt => as_int_int;
-
-        // raw long
-        internal long raw_long_int => value;
-
-        public long RawLong => raw_long_int;
-
-        // raw int
-        internal int raw_int_int => (int) value;
-
-        public int RawInt => raw_int_int;
-
-        // as float
-        public float AsFloat => (float) (value / (double) fixlut.ONE);
-
-        // as double
+        public long   RawLong  => value;
+        public int    RawInt   => (int) value;
+        public long   AsLong   => value >> fixlut.PRECISION;
+        public int    AsInt    => (int) (value >> fixlut.PRECISION);
+        public float  AsFloat  => (float) (value / (double) fixlut.ONE);
         public double AsDouble => value / (double) fixlut.ONE;
 
-        internal fp as_multiplier_int => this / _100;
-
-        public fp as_multiplier => as_multiplier_int;
-
-        internal fp as_percent_int => this * _100;
-
-        public fp as_percent => as_percent_int;
+        public fp AsMultiplier => this / _100;
+        public fp AsPercent    => this * _100;
 
         static fp()
         {
             min = new fp(long.MinValue);
             max = new fp(long.MaxValue);
 
-            _0  = parse_int(0);
-            _1  = parse_int(1);
-            _2  = parse_int(2);
-            _3  = parse_int(3);
-            _4  = parse_int(4);
-            _5  = parse_int(5);
-            _6  = parse_int(6);
-            _7  = parse_int(7);
-            _8  = parse_int(8);
-            _9  = parse_int(9);
-            _10 = parse_int(10);
+            _0  = Parse(0);
+            _1  = Parse(1);
+            _2  = Parse(2);
+            _3  = Parse(3);
+            _4  = Parse(4);
+            _5  = Parse(5);
+            _6  = Parse(6);
+            _7  = Parse(7);
+            _8  = Parse(8);
+            _9  = Parse(9);
+            _10 = Parse(10);
 
-            _99  = parse_int(99);
-            _100 = parse_int(100);
-            _200 = parse_int(200);
+            _99  = Parse(99);
+            _100 = Parse(100);
+            _200 = Parse(200);
 
             _0_01 = _1    / _100;
             _0_02 = _0_01 * _2;
@@ -179,10 +154,10 @@ namespace ffg
             one_point_five     = one + half;
             one_point_zero_one = one + point_zero_one;
 
-            pi      = new fp(fixlut.PI);
-            pi2     = pi * two;
-            deg2rad = new fp(1143L);
-            rad2deg = new fp(3754936L);
+            pi            = new fp(fixlut.PI);
+            pi2           = pi * two;
+            deg2rad       = new fp(1143L);
+            rad2deg       = new fp(3754936L);
             rad_90degrees = pi * half;
             epsilon       = new fp(1);
         }
@@ -195,24 +170,14 @@ namespace ffg
         public static fp operator -(fp a)
         {
             fp r;
-            r.value =
-#if !FFG_DISABLE_OVERFLOW_CHECK
-                checked
-#endif
-                    (-a.value);
-
+            r.value = -a.value;
             return r;
         }
 
         public static fp operator +(fp a)
         {
             fp r;
-            r.value =
-#if !FFG_DISABLE_OVERFLOW_CHECK
-                checked
-#endif
-                    (+a.value);
-
+            r.value = +a.value;
             return r;
         }
 
@@ -220,60 +185,35 @@ namespace ffg
         public static fp operator +(fp a, fp b)
         {
             fp r;
-            r.value =
-#if !FFG_DISABLE_OVERFLOW_CHECK
-                checked
-#endif
-                    (a.value + b.value);
-
+            r.value = a.value + b.value;
             return r;
         }
 
         public static fp operator -(fp a, fp b)
         {
             fp r;
-            r.value =
-#if !FFG_DISABLE_OVERFLOW_CHECK
-                checked
-#endif
-                    (a.value - b.value);
-
+            r.value = a.value - b.value;
             return r;
         }
 
         public static fp operator *(fp a, fp b)
         {
             fp r;
-            r.value =
-#if !FFG_DISABLE_OVERFLOW_CHECK
-                checked
-#endif
-                    ((a.value * b.value) >> fixlut.PRECISION);
-
+            r.value = (a.value * b.value) >> fixlut.PRECISION;
             return r;
         }
 
         public static fp operator /(fp a, fp b)
         {
             fp r;
-            r.value =
-#if !FFG_DISABLE_OVERFLOW_CHECK
-                checked
-#endif
-                    ((a.value << fixlut.PRECISION) / b.value);
-
+            r.value = (a.value << fixlut.PRECISION) / b.value;
             return r;
         }
 
         public static fp operator %(fp a, fp b)
         {
             fp r;
-            r.value =
-#if !FFG_DISABLE_OVERFLOW_CHECK
-                checked
-#endif
-                    (a.value % b.value);
-
+            r.value = a.value % b.value;
             return r;
         }
 
@@ -319,12 +259,7 @@ namespace ffg
 
         public override bool Equals(object obj)
         {
-            if (obj is fp)
-            {
-                return value == ((fp) obj).value;
-            }
-
-            return false;
+            return obj is fp other && this == other;
         }
 
         public override int GetHashCode()
@@ -334,70 +269,40 @@ namespace ffg
 
         public override string ToString()
         {
-            return AsFloat.ToString();
-            // var v = Math.Abs(value);
-            // var s = $"{v >> fixlut.PRECISION}.{(v % fixlut.ONE).ToString().PadLeft(FRACTIONS_COUNT, '0')}";
-            //
-            // if (value < 0)
-            // {
-            //     return "-" + s;
-            // }
-            //
-            // return s;
+            var v                 = Math.Abs(value);
+            var fraction          = v % fixlut.ONE;
+            var correctedFraction = fraction * VISUALIZATION_FACTOR / VISUALIZATION_FRACTIONS;
+
+            var s = $"{v >> fixlut.PRECISION}.{correctedFraction.ToString().PadLeft(fixlut.FRACTIONS_COUNT, '0')}";
+
+            if (value < 0)
+            {
+                return "-" + s;
+            }
+
+            return s;
         }
 
-        internal static fp raw_unsafe_int(long value)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp ParseRaw(long value)
         {
             return new fp(value);
         }
-
-        public static fp raw_unsafe(long value)
-        {
-            return raw_unsafe_int(value);
-        }
-
-        internal static fp parse_int(long value)
-        {
-            return new fp(checked(value << fixlut.PRECISION));
-        }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Parse(long value)
         {
-            return parse_int(value);
+            return new fp(value << fixlut.PRECISION);
         }
 
-        internal static fp parse_int(float value)
-        {
-            return new fp(checked((long) (value * fixlut.ONE)));
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Parse(float value)
         {
-            return parse_int(value);
-        }
-
-        static long ParseInteger(string format)
-        {
-            return long.Parse(format) * fixlut.ONE;
-        }
-
-        static long ParseFractions(string format)
-        {
-            if (format.Length < FRACTIONS_COUNT)
-            {
-                format = format.PadRight(FRACTIONS_COUNT, '0');
-            }
-
-            long integer   = 0;
-            long fractions = long.Parse(format);
-
-            while (fractions >= fixlut.ONE)
-            {
-                integer   += fixlut.ONE;
-                fractions -= fixlut.ONE;
-            }
-
-            return checked(integer + fractions);
+            value = (float)Math.Round(value, 5);
+            var str = value.ToString("F5", CultureInfo.InvariantCulture);
+            var split = str.Split('.');
+            var fractionStr = split[1].PadRight(fixlut.FRACTIONS_COUNT, '0');
+            return Parse($"{split[0]}.{fractionStr.Substring(0, 5)}");
         }
 
         public static fp Parse(string value)
@@ -411,30 +316,23 @@ namespace ffg
             {
                 return zero;
             }
+            
+            var negative = value[0] == '-';
 
-            var negative = false;
-            var fraction = value[0] == '.';
-
-            if (negative = (value[0] == '-'))
+            if (negative)
             {
                 value = value.Substring(1);
             }
 
-            var parts  = value.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
-            var parsed = default(long);
+            var fraction = value[0] == '.';
+
+            var  parts = value.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
+            long parsed;
 
             switch (parts.Length)
             {
                 case 1:
-                    if (fraction)
-                    {
-                        parsed = ParseFractions(parts[0]);
-                    }
-                    else
-                    {
-                        parsed = ParseInteger(parts[0]);
-                    }
-
+                    parsed = fraction ? ParseFractions(parts[0]) : ParseInteger(parts[0]);
                     break;
 
                 case 2:
@@ -451,6 +349,31 @@ namespace ffg
             }
 
             return new fp(parsed);
+        }
+        
+        private static long ParseInteger(string format)
+        {
+            return long.Parse(format) * fixlut.ONE;
+        }
+
+        private static long ParseFractions(string format)
+        {
+            if (format.Length < fixlut.FRACTIONS_COUNT)
+            {
+                format = format.PadRight(fixlut.FRACTIONS_COUNT, '0');
+            }
+
+            long integer   = 0;
+            long fractions = long.Parse(format);
+            fractions = fractions * VISUALIZATION_FRACTIONS / VISUALIZATION_FACTOR;
+
+            while (fractions >= fixlut.ONE)
+            {
+                integer   += fixlut.ONE;
+                fractions -= fixlut.ONE;
+            }
+
+            return checked(integer + fractions);
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace ffg
+namespace FixedPoint
 {
     [Serializable]
     public struct fp2 : IEquatable<fp2>
@@ -94,8 +94,8 @@ namespace ffg
         {
             fp2 r;
 
-            r.x.value = ((a.x.value * b.value) >> fixlut.PRECISION);
-            r.y.value = ((a.y.value * b.value) >> fixlut.PRECISION);
+            r.x.value = (a.x.value * b.value) >> fixlut.PRECISION;
+            r.y.value = (a.y.value * b.value) >> fixlut.PRECISION;
 
             return r;
         }
@@ -104,8 +104,8 @@ namespace ffg
         {
             fp2 r;
 
-            r.x.value = ((a.x.value * b.value) >> fixlut.PRECISION);
-            r.y.value = ((a.y.value * b.value) >> fixlut.PRECISION);
+            r.x.value = (a.x.value * b.value) >> fixlut.PRECISION;
+            r.y.value = (a.y.value * b.value) >> fixlut.PRECISION;
 
             return r;
         }
@@ -114,8 +114,8 @@ namespace ffg
         {
             fp2 r;
 
-            r.x.value = ((a.x.value << fixlut.PRECISION) / b.value);
-            r.y.value = ((a.y.value << fixlut.PRECISION) / b.value);
+            r.x.value = (a.x.value << fixlut.PRECISION) / b.value;
+            r.y.value = (a.y.value << fixlut.PRECISION) / b.value;
 
             return r;
         }
@@ -124,8 +124,8 @@ namespace ffg
         {
             fp2 r;
 
-            r.x.value = ((a.x.value << fixlut.PRECISION) / b.value);
-            r.y.value = ((a.y.value << fixlut.PRECISION) / b.value);
+            r.x.value = (a.x.value << fixlut.PRECISION) / b.value;
+            r.y.value = (a.y.value << fixlut.PRECISION) / b.value;
 
             return r;
         }
@@ -142,14 +142,14 @@ namespace ffg
 
         public override bool Equals(object obj)
         {
-            if (obj is fp2)
-            {
-                return this == ((fp2) obj);
-            }
-
-            return false;
+            return obj is fp2 other && this == other;
         }
 
+        public bool Equals(fp2 other)
+        {
+            return this == other;
+        }
+        
         public override int GetHashCode()
         {
             return x.GetHashCode() ^ x.GetHashCode() << 2 ^ y.GetHashCode() >> 2;
@@ -158,11 +158,6 @@ namespace ffg
         public override string ToString()
         {
             return $"({x}, {y})";
-        }
-
-        public bool Equals(fp2 other)
-        {
-            return this == other;
         }
     }
 }

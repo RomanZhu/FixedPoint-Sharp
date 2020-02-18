@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ffg
+namespace FixedPoint
 {
     public struct fp3 : IEquatable<fp3>
     {
@@ -41,13 +41,6 @@ namespace ffg
             this.x.value = x.value;
             this.y.value = y.value;
             this.z.value = z.value;
-        }
-        
-        internal fp3(long x, long y, long z)
-        {
-            this.x.value = x;
-            this.y.value = y;
-            this.z.value = z;
         }
 
         public static fp3 X(fp x)
@@ -180,14 +173,14 @@ namespace ffg
             return obj is fp3 other && this == other;
         }
         
-        public override string ToString()
-        {
-            return $"({x}, {y}, {z})";
-        }
-
         public override int GetHashCode()
         {
             return HashCode.Combine(x, y, z);
+        }
+        
+        public override string ToString()
+        {
+            return $"({x}, {y}, {z})";
         }
     }
 }

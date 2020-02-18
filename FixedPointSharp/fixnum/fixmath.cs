@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace ffg
+namespace FixedPoint
 {
     public partial struct fixmath
     {
+        /// <param name="num">Angle in radians</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Cos(fp num)
         {
@@ -15,6 +16,7 @@ namespace ffg
             return new fp(fixlut.cos(num.value)) * sign;
         }
 
+        /// <param name="num">Angle in radians</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Sin(fp num)
         {
@@ -25,6 +27,7 @@ namespace ffg
             return new fp(fixlut.sin(num.value)) * sign;
         }
 
+        /// <param name="num">Angle in radians</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Tan(fp num)
         {
@@ -35,12 +38,14 @@ namespace ffg
             return new fp(fixlut.tan(num.value)) * sign;
         }
 
+        /// <param name="num">Angle in radians</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Acos(fp num)
         {
             return new fp(fixlut.acos(num.value));
         }
 
+        /// <param name="num">Angle in radians</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Asin(fp num)
         {
@@ -48,6 +53,7 @@ namespace ffg
         }
 
         //PROBABLY WRONG
+        /// <param name="num">Angle in radians</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Atan(fp num)
         {
@@ -55,6 +61,9 @@ namespace ffg
         }
 
         //WORKS FOR VALUES LESS THAN 512000
+        /// <summary>
+        /// Trims fraction of value and uses lookup table to find the result
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp SqrtAprox(fp num)
         {
@@ -65,7 +74,7 @@ namespace ffg
                 num  *= fp.minus_one;
             }
 
-            return new fp(fixlut.sqrt_aprox(num.as_long_int)) * sign;
+            return new fp(fixlut.sqrt_aprox(num.AsLong)) * sign;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -97,39 +106,41 @@ namespace ffg
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Floor(fp num)
         {
-            return fp.parse_int(num.as_long_int);
+            return fp.Parse(num.AsLong);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Ceil(fp num)
         {
-            var fractions = fp.raw_unsafe_int(num.value & 0x000000000000FFFFL);
+            var fractions = num.value & 0x000000000000FFFFL;
 
-            if (fractions.value == 0)
+            if (fractions == 0)
             {
                 return num;
             }
 
-            return num + fp.one;
+            var full = new fp(num.value >> fixlut.PRECISION << fixlut.PRECISION);
+
+            return full + fp.one;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Fractions(fp num)
         {
-            return fp.raw_unsafe_int(num.value & 0x000000000000FFFFL);
+            return new fp(num.value & 0x000000000000FFFFL);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int RountToInt(fp num)
         {
-            var fraction = fp.raw_unsafe_int(num.value & 0x000000000000FFFFL);
+            var fraction = new fp(num.value & 0x000000000000FFFFL);
 
             if (fraction.value >= fp.half.value)
             {
-                return num.as_int_int + 1;
+                return num.AsInt + 1;
             }
 
-            return num.as_int_int;
+            return num.AsInt;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -177,20 +188,25 @@ namespace ffg
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Lerp(fp from, fp to, fp t) {
-            var ret = Clamp(t, fp.zero, fp.one);
-            return from + ((to - from) * ret);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp LerpUnclamped(fp from, fp to, fp t) {
-            return from + ((to - from) * t);
+        public static fp Lerp(fp from, fp to, fp t)
+        {
+            fp ret;
+            if (t.value < fp.zero.value)
+            {
+                ret = fp.zero;
+            }
+            else
+            {
+                ret = t.value > fp.one.value ? fp.one : t;
+            }
+
+            return from + (to - from) * ret;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Sign(fp num)
         {
-            return num.value < fp.RAW_ZERO ? fp.minus_one : fp.one;
+            return num.value < fixlut.ZERO ? fp.minus_one : fp.one;
         }
     }
 }
