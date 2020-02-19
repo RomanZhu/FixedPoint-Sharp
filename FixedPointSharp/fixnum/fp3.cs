@@ -172,12 +172,18 @@ namespace FixedPoint
         {
             return obj is fp3 other && this == other;
         }
-        
+
         public override int GetHashCode()
         {
-            return HashCode.Combine(x, y, z);
+            unchecked
+            {
+                var hashCode = x.GetHashCode();
+                hashCode = (hashCode * 397) ^ y.GetHashCode();
+                hashCode = (hashCode * 397) ^ z.GetHashCode();
+                return hashCode;
+            }
         }
-        
+
         public override string ToString()
         {
             return $"({x}, {y}, {z})";

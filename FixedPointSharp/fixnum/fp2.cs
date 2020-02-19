@@ -149,10 +149,13 @@ namespace FixedPoint
         {
             return this == other;
         }
-        
+
         public override int GetHashCode()
         {
-            return x.GetHashCode() ^ x.GetHashCode() << 2 ^ y.GetHashCode() >> 2;
+            unchecked
+            {
+                return (x.GetHashCode() * 397) ^ y.GetHashCode();
+            }
         }
 
         public override string ToString()
