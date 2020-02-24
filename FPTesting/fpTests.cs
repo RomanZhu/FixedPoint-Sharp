@@ -60,5 +60,14 @@ namespace FPTesting
             Assert.IsTrue(parsedFp < fp._0);
             Assert.IsTrue(parsedFp > -fp._0_01 *fp._0_01);
         }
+
+        [Test]
+        public void AsIntTest() {
+            var val = fp._0_25 + fp.one;
+            val.AsInt.Should().Be(1);
+            
+            val = -fp._0_25 - fp.one;
+            val.AsInt.Should().Be(-2);
+        }
     }
 }

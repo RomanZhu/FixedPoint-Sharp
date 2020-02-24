@@ -72,13 +72,13 @@ namespace FPTesting
         public void RoundToIntTest()
         {
             var value = fp._5 + fp._0_25;
-            var result = fixmath.RountToInt(value);
+            var result = fixmath.RoundToInt(value);
             result.Should().Be(5);
             
-            result = fixmath.RountToInt(value + fp._0_33);
+            result = fixmath.RoundToInt(value + fp._0_33);
             result.Should().Be(6);
             
-            result = fixmath.RountToInt(value + fp._0_25);
+            result = fixmath.RoundToInt(value + fp._0_25);
             result.Should().Be(6);
         }
         

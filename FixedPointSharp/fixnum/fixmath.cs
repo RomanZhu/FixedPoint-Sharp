@@ -131,7 +131,7 @@ namespace FixedPoint
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int RountToInt(fp num)
+        public static int RoundToInt(fp num)
         {
             var fraction = new fp(num.value & 0x000000000000FFFFL);
 
