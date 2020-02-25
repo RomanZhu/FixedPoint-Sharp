@@ -1,14 +1,14 @@
 using System.Runtime.CompilerServices;
 
 namespace FixedPoint {
-    public struct random {
+    public struct Random {
         public uint state;
         
         /// <summary>
         /// Seed must be non-zero
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public random(uint seed)
+        public Random(uint seed)
         {
             state = seed;
             NextState();
