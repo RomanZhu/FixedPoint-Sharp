@@ -362,18 +362,15 @@ namespace FixedPoint
             {
                 format = format.PadRight(fixlut.FRACTIONS_COUNT, '0');
             }
-
-            long integer   = 0;
-            long fractions = long.Parse(format);
-            fractions = fractions * VISUALIZATION_FRACTIONS / VISUALIZATION_FACTOR;
-
-            while (fractions >= fixlut.ONE)
+            else if (format.Length > fixlut.FRACTIONS_COUNT)
             {
-                integer   += fixlut.ONE;
-                fractions -= fixlut.ONE;
+                format = format.Substring(0, fixlut.FRACTIONS_COUNT);
             }
 
-            return checked(integer + fractions);
+            var fractions = long.Parse(format);
+            fractions = fractions * VISUALIZATION_FRACTIONS / VISUALIZATION_FACTOR;
+
+            return fractions;
         }
     }
 }
