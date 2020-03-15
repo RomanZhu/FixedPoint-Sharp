@@ -11,10 +11,10 @@ namespace FPTesting
         public void ToStringTest()
         {
             var originalFp = fp._1 - fp._0_01;
-            originalFp.ToString().Should().Be("0.99009");
+            originalFp.ToString().Should().Be("0.99001");
             
             originalFp = fp._1 - fp._0_01 *fp._0_01;
-            originalFp.ToString().Should().Be("0.99999");
+            originalFp.ToString().Should().Be("0.99991");
             
             originalFp = fp._1;
             originalFp.ToString().Should().Be("1.00000");
@@ -26,7 +26,7 @@ namespace FPTesting
             originalFp.ToString().Should().Be("0.00999");
             
             originalFp = fp._0_50;
-            originalFp.ToString().Should().Be("0.50004");
+            originalFp.ToString().Should().Be("0.50000");
         }
         
         [Test]

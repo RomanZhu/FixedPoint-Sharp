@@ -1,45 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 
-namespace FixedPoint
-{
+namespace FixedPoint {
     [Serializable]
-    public struct fp : IEquatable<fp>, IComparable<fp>
-    {
-        private const long VISUALIZATION_FACTOR    = 152601;
-        private const long VISUALIZATION_FRACTIONS = 100000;
-
-        public class Comparer : IComparer<fp>
-        {
+    public struct fp : IEquatable<fp>, IComparable<fp> {
+        public class Comparer : IComparer<fp> {
             public static readonly Comparer instance = new Comparer();
 
-            Comparer()
-            {
-            }
+            Comparer() { }
 
-            int IComparer<fp>.Compare(fp x, fp y)
-            {
+            int IComparer<fp>.Compare(fp x, fp y) {
                 return x.value.CompareTo(y.value);
             }
         }
 
-        public class EqualityComparer : IEqualityComparer<fp>
-        {
+        public class EqualityComparer : IEqualityComparer<fp> {
             public static readonly EqualityComparer instance = new EqualityComparer();
 
-            EqualityComparer()
-            {
-            }
+            EqualityComparer() { }
 
-            bool IEqualityComparer<fp>.Equals(fp x, fp y)
-            {
+            bool IEqualityComparer<fp>.Equals(fp x, fp y) {
                 return x.value == y.value;
             }
 
-            int IEqualityComparer<fp>.GetHashCode(fp num)
-            {
+            int IEqualityComparer<fp>.GetHashCode(fp num) {
                 return num.value.GetHashCode();
             }
         }
@@ -104,8 +89,7 @@ namespace FixedPoint
         public fp AsMultiplier => this / _100;
         public fp AsPercent    => this * _100;
 
-        static fp()
-        {
+        static fp() {
             min = new fp(long.MinValue);
             max = new fp(long.MaxValue);
 
@@ -125,17 +109,17 @@ namespace FixedPoint
             _100 = Parse(100);
             _200 = Parse(200);
 
-            _0_01 = _1    / _100;
+            _0_01 = _1 / _100;
             _0_02 = _0_01 * _2;
             _0_03 = _0_01 * _3;
             _0_04 = _0_01 * _4;
             _0_05 = _0_01 * _5;
 
-            _0_10 = _1    / _10;
-            _0_20 = _1    / _5;
-            _0_25 = _1    / _4;
-            _0_33 = _1    / _3;
-            _0_50 = _1    / _2;
+            _0_10 = _1 / _10;
+            _0_20 = _1 / _5;
+            _0_25 = _1 / _4;
+            _0_33 = _1 / _3;
+            _0_50 = _1 / _2;
             _0_75 = _0_25 * _3;
             _0_95 = _1 - _0_05;
 
@@ -143,7 +127,7 @@ namespace FixedPoint
 
             zero               = new fp(0);
             one                = new fp(fixlut.ONE);
-            two                = one       + one;
+            two                = one + one;
             three              = one + one + one;
             half               = one / two;
             point_one          = new fp(6553L);
@@ -162,215 +146,118 @@ namespace FixedPoint
             epsilon       = new fp(1);
         }
 
-        internal fp(long v)
-        {
+        internal fp(long v) {
             value = v;
         }
 
-        public static fp operator -(fp a)
-        {
+        public static fp operator -(fp a) {
             fp r;
             r.value = -a.value;
             return r;
         }
 
-        public static fp operator +(fp a)
-        {
+        public static fp operator +(fp a) {
             fp r;
             r.value = +a.value;
             return r;
         }
 
 
-        public static fp operator +(fp a, fp b)
-        {
+        public static fp operator +(fp a, fp b) {
             fp r;
             r.value = a.value + b.value;
             return r;
         }
 
-        public static fp operator -(fp a, fp b)
-        {
+        public static fp operator -(fp a, fp b) {
             fp r;
             r.value = a.value - b.value;
             return r;
         }
 
-        public static fp operator *(fp a, fp b)
-        {
+        public static fp operator *(fp a, fp b) {
             fp r;
             r.value = (a.value * b.value) >> fixlut.PRECISION;
             return r;
         }
 
-        public static fp operator /(fp a, fp b)
-        {
+        public static fp operator /(fp a, fp b) {
             fp r;
             r.value = (a.value << fixlut.PRECISION) / b.value;
             return r;
         }
 
-        public static fp operator %(fp a, fp b)
-        {
+        public static fp operator %(fp a, fp b) {
             fp r;
             r.value = a.value % b.value;
             return r;
         }
 
-        public static bool operator <(fp a, fp b)
-        {
+        public static bool operator <(fp a, fp b) {
             return a.value < b.value;
         }
 
-        public static bool operator <=(fp a, fp b)
-        {
+        public static bool operator <=(fp a, fp b) {
             return a.value <= b.value;
         }
 
-        public static bool operator >(fp a, fp b)
-        {
+        public static bool operator >(fp a, fp b) {
             return a.value > b.value;
         }
 
-        public static bool operator >=(fp a, fp b)
-        {
+        public static bool operator >=(fp a, fp b) {
             return a.value >= b.value;
         }
 
-        public static bool operator ==(fp a, fp b)
-        {
+        public static bool operator ==(fp a, fp b) {
             return a.value == b.value;
         }
 
-        public static bool operator !=(fp a, fp b)
-        {
+        public static bool operator !=(fp a, fp b) {
             return a.value != b.value;
         }
 
-        public int CompareTo(fp other)
-        {
+        public int CompareTo(fp other) {
             return value.CompareTo(other.value);
         }
 
-        public bool Equals(fp other)
-        {
+        public bool Equals(fp other) {
             return value == other.value;
         }
 
-        public override bool Equals(object obj)
-        {
+        public override bool Equals(object obj) {
             return obj is fp other && this == other;
         }
 
-        public override int GetHashCode()
-        {
+        public override int GetHashCode() {
             return value.GetHashCode();
         }
 
-        public override string ToString()
-        {
-            var v                 = Math.Abs(value);
-            var fraction          = v % fixlut.ONE;
-            var correctedFraction = fraction * VISUALIZATION_FACTOR / VISUALIZATION_FRACTIONS;
-
-            var s = $"{v >> fixlut.PRECISION}.{correctedFraction.ToString().PadLeft(fixlut.FRACTIONS_COUNT, '0')}";
-
-            if (value < 0)
-            {
-                return "-" + s;
-            }
-
-            return s;
+        public override string ToString() {
+            var corrected = Math.Round(AsDouble, 5);
+            return $"{corrected:F5}";
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp ParseRaw(long value)
-        {
+        public static fp ParseRaw(long value) {
             return new fp(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Parse(long value)
-        {
+        public static fp Parse(long value) {
             return new fp(value << fixlut.PRECISION);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Parse(float value)
-        {
-            value = (float)Math.Round(value, 5);
-            var str = value.ToString("F5", CultureInfo.InvariantCulture);
-            var split = str.Split('.');
-            var fractionStr = split[1].PadRight(fixlut.FRACTIONS_COUNT, '0');
-            return Parse($"{split[0]}.{fractionStr.Substring(0, 5)}");
+        public static fp Parse(float value) {
+            value = (float) Math.Round(value, 5);
+            return new fp((long) (value * fixlut.ONE));
         }
 
-        public static fp Parse(string value)
-        {
-            if (value == null)
-            {
-                return zero;
-            }
-
-            if (value.Trim().Length == 0)
-            {
-                return zero;
-            }
-            
-            var negative = value[0] == '-';
-
-            if (negative)
-            {
-                value = value.Substring(1);
-            }
-
-            var fraction = value[0] == '.';
-
-            var  parts = value.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
-            long parsed;
-
-            switch (parts.Length)
-            {
-                case 1:
-                    parsed = fraction ? ParseFractions(parts[0]) : ParseInteger(parts[0]);
-                    break;
-
-                case 2:
-                    parsed = checked(ParseInteger(parts[0]) + ParseFractions(parts[1]));
-                    break;
-
-                default:
-                    throw new FormatException(value);
-            }
-
-            if (negative)
-            {
-                return new fp(-parsed);
-            }
-
-            return new fp(parsed);
-        }
-        
-        private static long ParseInteger(string format)
-        {
-            return long.Parse(format) * fixlut.ONE;
-        }
-
-        private static long ParseFractions(string format)
-        {
-            if (format.Length < fixlut.FRACTIONS_COUNT)
-            {
-                format = format.PadRight(fixlut.FRACTIONS_COUNT, '0');
-            }
-            else if (format.Length > fixlut.FRACTIONS_COUNT)
-            {
-                format = format.Substring(0, fixlut.FRACTIONS_COUNT);
-            }
-
-            var fractions = long.Parse(format);
-            fractions = fractions * VISUALIZATION_FRACTIONS / VISUALIZATION_FACTOR;
-
-            return fractions;
+        public static fp Parse(string value) {
+            var doubleValue = double.Parse(value);
+            var longValue   = (long) (doubleValue * fixlut.ONE);
+            return new fp(longValue);
         }
     }
 }
