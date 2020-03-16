@@ -61,15 +61,14 @@ namespace FixedPoint
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp3 Lerp(fp3 from, fp3 to, fp t)
         {
-            t = Clamp(t, fp.zero, fp.one);
-            
-            return new fp3(Lerp(from.x, to.x, t), Lerp(from.y, to.y, t), Lerp(from.z, to.z, t));
+            t = Clamp01(t);
+            return new fp3(LerpUnclamped(from.x, to.x, t), LerpUnclamped(from.y, to.y, t), LerpUnclamped(from.z, to.z, t));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp3 LerpUnclamped(fp3 from, fp3 to, fp t)
         {
-            return new fp3(Lerp(from.x, to.x, t), Lerp(from.y, to.y, t), Lerp(from.z, to.z, t));
+            return new fp3(LerpUnclamped(from.x, to.x, t), LerpUnclamped(from.y, to.y, t), LerpUnclamped(from.z, to.z, t));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

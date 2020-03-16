@@ -1,5 +1,4 @@
-﻿using System;
-using FixedPoint;
+﻿using FixedPoint;
 using FluentAssertions;
 using NUnit.Framework;
 

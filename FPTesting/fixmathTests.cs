@@ -26,7 +26,7 @@ namespace FPTesting
         public void TanTest()
         {
             var value  = fp._0_25;
-            var result = fixmath.Tan(value);
+            fixmath.SinCosTan(value, out _, out _, out var result);
             result.AsFloat.Should().BeApproximately(0.255f, 0.001f);
         }
         
@@ -155,6 +155,25 @@ namespace FPTesting
             
             result = fixmath.Sign(-fp._0_25);
             result.Should().Be(-fp._1);
+        }
+        
+        [Test]
+        public void IsOppositeSignTest()
+        {
+            var result = fixmath.IsOppositeSign(fp._0_25, -fp._0_20);
+            result.Should().Be(true);
+            
+            result = fixmath.IsOppositeSign(fp._0_25, fp._0_20);
+            result.Should().Be(false);            
+            
+            result = fixmath.IsOppositeSign(-fp._0_25, -fp._0_20);
+            result.Should().Be(false);
+        }
+
+        [Test]
+        public void Sin2Test() {
+            fixmath.SinCosTan(fp._0_20, out var sin, out var cos, out var tan);
+            var bbb = sin;
         }
     }
 }

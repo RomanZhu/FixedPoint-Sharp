@@ -144,7 +144,7 @@ namespace FixedPoint
             else
             {
                 fp2 v1 = value;
-                fp m = default(fp);
+                fp m = default;
                 fp r2;
 
                 r2.value =
@@ -174,7 +174,7 @@ namespace FixedPoint
 
                 if (m.value <= fp.epsilon.value)
                 {
-                    v1 = default(fp2);
+                    v1 = default;
                 }
                 else
                 {
@@ -282,7 +282,7 @@ namespace FixedPoint
         public static fp2 Normalize(fp2 v)
         {
             fp2 v1 = v;
-            fp m = default(fp);
+            fp m = default;
             fp r;
 
             r.value =
@@ -312,7 +312,7 @@ namespace FixedPoint
 
             if (m.value <= fp.epsilon.value)
             {
-                v1 = default(fp2);
+                v1 = default;
             }
             else
             {
@@ -324,33 +324,22 @@ namespace FixedPoint
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp2 Lerp(fp2 from, fp2 to, fp t)
+        public static fp2 Lerp(fp2 from, fp2 to, fp t) {
+            t = Clamp01(t);
+            return new fp2(LerpUnclamped(from.x, to.x, t), LerpUnclamped(from.y, to.y, t));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp2 LerpUnclamped(fp2 from, fp2 to, fp t)
         {
-            fp t1 = t;
-            if (t1.value < fp.zero.value)
-            {
-                t1 = fp.zero;
-            }
-            else
-            {
-                if (t1.value > fp.one.value)
-                {
-                    t1 = fp.one;
-                }
-                else
-                {
-                    t1 = t1;
-                }
-            }
-
-            return new fp2(@from.x + (to.x - @from.x) * t1, @from.y + (to.y - @from.y) * t1);
+            return new fp2(LerpUnclamped(from.x, to.x, t), LerpUnclamped(from.y, to.y, t));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Angle(fp2 a, fp2 b)
         {
             fp2 v = a;
-            fp m = default(fp);
+            fp m = default;
             fp r2;
 
             r2.value =
@@ -380,7 +369,7 @@ namespace FixedPoint
 
             if (m.value <= fp.epsilon.value)
             {
-                v = default(fp2);
+                v = default;
             }
             else
             {
@@ -389,7 +378,7 @@ namespace FixedPoint
             }
 
             fp2 v1 = b;
-            fp m1 = default(fp);
+            fp m1 = default;
             fp r3;
 
             r3.value =
@@ -419,7 +408,7 @@ namespace FixedPoint
 
             if (m1.value <= fp.epsilon.value)
             {
-                v1 = default(fp2);
+                v1 = default;
             }
             else
             {
@@ -462,7 +451,7 @@ namespace FixedPoint
         public static fp Radians(fp2 a, fp2 b)
         {
             fp2 v = a;
-            fp m = default(fp);
+            fp m = default;
             fp r2;
 
             r2.value =
@@ -492,7 +481,7 @@ namespace FixedPoint
 
             if (m.value <= fp.epsilon.value)
             {
-                v = default(fp2);
+                v = default;
             }
             else
             {
@@ -501,7 +490,7 @@ namespace FixedPoint
             }
 
             fp2 v1 = b;
-            fp m1 = default(fp);
+            fp m1 = default;
             fp r3;
 
             r3.value =
@@ -531,7 +520,7 @@ namespace FixedPoint
 
             if (m1.value <= fp.epsilon.value)
             {
-                v1 = default(fp2);
+                v1 = default;
             }
             else
             {
@@ -574,7 +563,7 @@ namespace FixedPoint
         public static fp RadiansSigned(fp2 a, fp2 b)
         {
             fp2 v = a;
-            fp m = default(fp);
+            fp m = default;
             fp r2;
 
             r2.value =
@@ -604,7 +593,7 @@ namespace FixedPoint
 
             if (m.value <= fp.epsilon.value)
             {
-                v = default(fp2);
+                v = default;
             }
             else
             {
@@ -613,7 +602,7 @@ namespace FixedPoint
             }
 
             fp2 v1 = b;
-            fp m1 = default(fp);
+            fp m1 = default;
             fp r3;
 
             r3.value =
@@ -643,7 +632,7 @@ namespace FixedPoint
 
             if (m1.value <= fp.epsilon.value)
             {
-                v1 = default(fp2);
+                v1 = default;
             }
             else
             {
@@ -773,8 +762,8 @@ namespace FixedPoint
         public static fp2 Rotate(fp2 vector, fp angle)
         {
             fp2 vector1 = vector;
-            var cs = fixmath.Cos(angle);
-            var sn = fixmath.Sin(angle);
+            var cs = Cos(angle);
+            var sn = Sin(angle);
 
             var px = (vector1.x * cs) - (vector1.y * sn);
             var pz = (vector1.x * sn) + (vector1.y * cs);

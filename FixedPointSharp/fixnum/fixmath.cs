@@ -7,57 +7,44 @@ namespace FixedPoint
     {
         /// <param name="num">Angle in radians</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Cos(fp num)
-        {
-            var sign = fp.one;
-            if (num > fp.pi || num < -fp.pi)
-                sign = fp.minus_one;
-
-            return new fp(fixlut.cos(num.value)) * sign;
+        public static fp Sin(fp num) {
+            num.value %= fp.pi2.value;
+            num /= fp.pi2;
+            return new fp(fixlut.sin(num.value));
+        }
+        
+        /// <param name="num">Angle in radians</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp Cos(fp num) {
+            num.value %= fp.pi2.value;
+            num       /= fp.pi2;
+            return new fp(fixlut.cos(num.value));
         }
 
         /// <param name="num">Angle in radians</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Sin(fp num)
-        {
-            var sign = fp.one;
-            if (num > fp.pi || num < -fp.pi)
-                sign = fp.minus_one;
-
-            return new fp(fixlut.sin(num.value)) * sign;
-        }
-
-        /// <param name="num">Angle in radians</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Tan(fp num)
-        {
-            var sign = fp.one;
-            if (num > fp.pi || num < -fp.pi)
-                sign = fp.minus_one;
-
-            return new fp(fixlut.tan(num.value)) * sign;
-        }
-
-        /// <param name="num">Angle in radians</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Acos(fp num)
-        {
+        public static fp Acos(fp num) {
             return new fp(fixlut.acos(num.value));
         }
-
+        
         /// <param name="num">Angle in radians</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Asin(fp num)
-        {
-            return new fp(fixlut.asin(num.value));
+        public static void SinCos(fp num, out fp sin, out fp cos) {
+            num.value %= fp.pi2.value;
+            num       /= fp.pi2;
+            fixlut.sin_cos(num.value, out var sinVal, out var cosVal);
+            sin = fp.ParseRaw(sinVal);
+            cos = fp.ParseRaw(cosVal);
         }
-
-        //PROBABLY WRONG
+        
         /// <param name="num">Angle in radians</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Atan(fp num)
-        {
-            return new fp(fixlut.atan(num.value));
+        public static void SinCosTan(fp num, out fp sin, out fp cos, out fp tan) {
+            num.value %= fp.pi2.value;
+            num       /= fp.pi2;
+            fixlut.sin_cos_tan(num.value, out var sinVal, out var cosVal, out var tanVal);
+            sin = fp.ParseRaw(sinVal);
+            cos = fp.ParseRaw(cosVal);
+            tan = fp.ParseRaw(tanVal);
         }
 
         //WORKS FOR VALUES LESS THAN 512000
@@ -186,27 +173,38 @@ namespace FixedPoint
 
             return num;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp Clamp01(fp num)
+        {
+            if (num.value < 0)
+            {
+                return fp.zero;
+            }
+
+            return num.value > fp.one.value ? fp.one : num;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Lerp(fp from, fp to, fp t)
+        public static fp Lerp(fp from, fp to, fp t) {
+            t = Clamp01(t);
+            return from + (to - from) * t;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp LerpUnclamped(fp from, fp to, fp t)
         {
-            fp ret;
-            if (t.value < fp.zero.value)
-            {
-                ret = fp.zero;
-            }
-            else
-            {
-                ret = t.value > fp.one.value ? fp.one : t;
-            }
-
-            return from + (to - from) * ret;
+            return from + (to - from) * t;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Sign(fp num)
         {
             return num.value < fixlut.ZERO ? fp.minus_one : fp.one;
+        }
+
+        public static bool IsOppositeSign(fp a, fp b) {
+            return ((a.value ^ b.value) < 0);
         }
     }
 }
