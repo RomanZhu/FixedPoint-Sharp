@@ -153,8 +153,18 @@ namespace FixedPoint
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Abs(fp num)
-        {
+        public static fp Abs(fp num) {
+            var v = num.value;
+            return new fp((v ^ (v >> 63)) - (v >> 63));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp Abs2(fp num) {
+            return new fp(num.value < 0 ? -num.value : num.value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp Abs3(fp num) {
             return new fp(Math.Abs(num.value));
         }
 
