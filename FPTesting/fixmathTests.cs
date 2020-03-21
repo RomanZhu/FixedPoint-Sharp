@@ -23,6 +23,15 @@ namespace FPTesting
         }
         
         [Test]
+        public void SinCosTest()
+        {
+            var value  = fp._0_25;
+            fixmath.SinCos(value, out var sin, out var cos);
+            sin.AsFloat.Should().BeApproximately(0.247f, 0.001f);
+            cos.AsFloat.Should().BeApproximately(0.969f, 0.001f);
+        }
+        
+        [Test]
         public void TanTest()
         {
             var value  = fp._0_25;
