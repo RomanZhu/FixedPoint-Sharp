@@ -1,5 +1,7 @@
 # FixedPoint-Sharp
 
+Oopsie, pushed half done changes to master branch. Please use this link to get latest stable version https://github.com/RomanZhu/FixedPoint-Sharp/tree/cacd52e9c5e8fbbb44370725aef4bc1184cce287
+
 ## Features
 - LUT-based trigonometry
 - 48.16 precision
