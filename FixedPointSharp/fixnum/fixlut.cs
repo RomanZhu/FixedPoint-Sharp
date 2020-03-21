@@ -12,20 +12,26 @@ namespace FixedPoint
         public const long ONE       = 1 << PRECISION;
         public const long ZERO      = 0;
 
-        public const int SIN_TABLE_SIZE = 512;
-        public static readonly List<int> SinLut2 = new List<int>(SIN_TABLE_SIZE+1);
+        public const int SIN_VALUES_COUNT = 512;
+        public static readonly List<int> SinCosLut = new List<int>(SIN_VALUES_COUNT * 2 + 2);
 
         static fixlut() {
-            for (var i = 0; i < SIN_TABLE_SIZE; i++) {
-                var angle = 2 * Math.PI * i / SIN_TABLE_SIZE;
+            for (var i = 0; i < SIN_VALUES_COUNT; i++) {
+                var angle = 2 * Math.PI * i / SIN_VALUES_COUNT;
+                
                 var sinValue = Math.Sin(angle);
-                var moved = sinValue * ONE;
-                var rounded = moved > 0 ? moved + 0.5f : moved - 0.5f;
-                var rounded2 = (int) rounded;
-                SinLut2.Add(rounded2);
+                var movedSin = sinValue * ONE;
+                var roundedSin = movedSin > 0 ? movedSin + 0.5f : movedSin - 0.5f;
+                SinCosLut.Add((int) roundedSin);
+                
+                var cosValue = Math.Cos(angle);
+                var movedCos    = cosValue * ONE;
+                var roundedCos  = movedCos > 0 ? movedCos + 0.5f : movedCos - 0.5f;
+                SinCosLut.Add((int) roundedCos);
             }
             
-            SinLut2.Add(SinLut2[0]);
+            SinCosLut.Add(SinCosLut[0]);
+            SinCosLut.Add(SinCosLut[1]);
         }
 
         public static long sin(long value) {
@@ -34,24 +40,24 @@ namespace FixedPoint
             }
 
             var index = (int) (value >> SHIFT);
+            var doubleIndex = index * 2;
             var fraction = (value - (index << SHIFT)) << 9;
-            var a = SinLut2[index];
-            var b = SinLut2[index + 1];
+            var a = SinCosLut[doubleIndex];
+            var b = SinCosLut[doubleIndex + 2];
             var v2 = a + (((b - a) * fraction) >> PRECISION);
             return v2;
         }
         
         public static long cos(long value) {
-            value += fp._0_25.value;
-            
             if (value < 0) {
                 value = -value;
             }
 
             var index    = (int) (value >> SHIFT);
+            var doubleIndex = index * 2;
             var fraction = (value - (index << SHIFT)) << 9;
-            var a        = SinLut2[index];
-            var b        = SinLut2[index + 1];
+            var a        = SinCosLut[doubleIndex + 1];
+            var b        = SinCosLut[doubleIndex + 3];
             var v2       = a + (((b - a) * fraction) >> PRECISION);
             return v2;
         }
@@ -61,19 +67,17 @@ namespace FixedPoint
                 value = -value;
             }
 
-            var index    = (int) (value >> SHIFT);
-            var fraction = (value - (index << SHIFT)) << 9;
-            var a        = SinLut2[index];
-            var b        = SinLut2[index + 1];
-            sin = a + (((b - a) * fraction) >> PRECISION);
+            var index     = (int) (value >> SHIFT);
+            var doubleIndex = index * 2;
+            var fractions = (value - (index << SHIFT)) << 9;
 
-            value += fp._0_25.value;
+            var sinA = SinCosLut[doubleIndex];
+            var cosA = SinCosLut[doubleIndex + 1];
+            var sinB = SinCosLut[doubleIndex + 2];
+            var cosB = SinCosLut[doubleIndex + 3];
 
-            index    = (int) (value >> SHIFT);
-            fraction = (value - (index << SHIFT)) << 9;
-            a        = SinLut2[index];
-            b        = SinLut2[index + 1];
-            cos      = a + (((b - a) * fraction) >> PRECISION);
+            sin = sinA + (((sinB - sinA) * fractions) >> PRECISION);
+            cos = cosA + (((cosB - cosA) * fractions) >> PRECISION);
         }
         
         public static void sin_cos_tan(long value, out long sin, out long cos, out long tan) {
@@ -81,19 +85,17 @@ namespace FixedPoint
                 value = -value;
             }
 
-            var index    = (int) (value >> SHIFT);
-            var fraction = (value - (index << SHIFT)) << 9;
-            var a        = SinLut2[index];
-            var b        = SinLut2[index + 1];
-            sin = a + (((b - a) * fraction) >> PRECISION);
+            var index     = (int) (value >> SHIFT);
+            var doubleIndex = index * 2;
+            var fractions = (value - (index << SHIFT)) << 9;
 
-            value += fp._0_25.value;
-            index    = (int) (value >> SHIFT);
-            fraction = (value - (index << SHIFT)) << 9;
-            a        = SinLut2[index];
-            b        = SinLut2[index + 1];
-            cos      = a + (((b - a) * fraction) >> PRECISION);
-            
+            var sinA = SinCosLut[doubleIndex];
+            var cosA = SinCosLut[doubleIndex + 1];
+            var sinB = SinCosLut[doubleIndex + 2];
+            var cosB = SinCosLut[doubleIndex + 3];
+
+            sin = sinA + (((sinB - sinA) * fractions) >> PRECISION);
+            cos = cosA + (((cosB - cosA) * fractions) >> PRECISION);
             tan = (sin << PRECISION) / cos;
         }
         
@@ -129,8 +131,8 @@ namespace FixedPoint
 
             var index    = (int) (value >> SHIFT);
             var fraction = (value - (index << SHIFT)) << 9;
-            var a        = SinLut2[index];
-            var b        = SinLut2[index + 1];
+            var a        = SinCosLut[index];
+            var b        = SinCosLut[index + 1];
             var v2       = a + (((b - a) * fraction) >> PRECISION);
             return v2;
         }
