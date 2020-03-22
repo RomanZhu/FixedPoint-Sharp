@@ -72,10 +72,12 @@ namespace FixedPoint {
         public static readonly fp one_point_zero_one;
         public static readonly fp pi;
         public static readonly fp pi2;
+        public static readonly fp one_div_pi2;
         public static readonly fp deg2rad;
         public static readonly fp rad2deg;
         public static readonly fp rad_90degrees;
         public static readonly fp epsilon;
+        public static readonly fp e;
 
         public long value;
 
@@ -144,6 +146,8 @@ namespace FixedPoint {
             rad2deg       = new fp(3754936L);
             rad_90degrees = pi * half;
             epsilon       = new fp(1);
+            e             = new fp(178145L);
+            one_div_pi2 = one / pi2;
         }
 
         internal fp(long v) {
