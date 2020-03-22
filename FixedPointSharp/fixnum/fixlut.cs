@@ -10,17 +10,30 @@ namespace FixedPoint {
         public const long ONE             = 1 << PRECISION;
         public const long ZERO            = 0;
 
+        public const int SIN_VALUE_COUNT     = 512;
         public const int SIN_COS_VALUE_COUNT = 512;
-        public const int TAN_VALUE_COUNT = 512;
-        public const int ACOS_VALUE_COUNT = 512;
-        public const int ASIN_VALUE_COUNT = 512;
+        public const int TAN_VALUE_COUNT     = 512;
+        public const int ACOS_VALUE_COUNT    = 512;
+        public const int ASIN_VALUE_COUNT    = 512;
 
+        public static readonly List<int> SinLut    = new List<int>(SIN_VALUE_COUNT + 1);
         public static readonly List<int> SinCosLut = new List<int>(SIN_COS_VALUE_COUNT * 2 + 2);
-        public static readonly List<int> TanLut = new List<int>(TAN_VALUE_COUNT + 1);
-        public static readonly List<int> AcosLut = new List<int>(ACOS_VALUE_COUNT + 2);
+        public static readonly List<int> TanLut    = new List<int>(TAN_VALUE_COUNT + 1);
+        public static readonly List<int> AcosLut   = new List<int>(ACOS_VALUE_COUNT + 2);
         public static readonly List<int> AsinLut   = new List<int>(ASIN_VALUE_COUNT + 2);
 
         static fixlut() {
+            for (var i = 0; i < SIN_COS_VALUE_COUNT; i++) {
+                var angle = 2 * Math.PI * i / SIN_COS_VALUE_COUNT;
+
+                var sinValue   = Math.Sin(angle);
+                var movedSin   = sinValue * ONE;
+                var roundedSin = movedSin > 0 ? movedSin + 0.5f : movedSin - 0.5f;
+                SinLut.Add((int) roundedSin);
+            }
+
+            SinLut.Add(SinLut[0]);
+
             for (var i = 0; i < SIN_COS_VALUE_COUNT; i++) {
                 var angle = 2 * Math.PI * i / SIN_COS_VALUE_COUNT;
 
@@ -37,7 +50,7 @@ namespace FixedPoint {
 
             SinCosLut.Add(SinCosLut[0]);
             SinCosLut.Add(SinCosLut[1]);
-            
+
             for (var i = 0; i < TAN_VALUE_COUNT; i++) {
                 var angle = 2 * Math.PI * i / TAN_VALUE_COUNT;
 
@@ -66,7 +79,6 @@ namespace FixedPoint {
             AsinLut.Add(AsinLut[ASIN_VALUE_COUNT - 1]);
             AsinLut.Add(AsinLut[ASIN_VALUE_COUNT - 1]);
 
-
             for (var i = 0; i < ACOS_VALUE_COUNT; i++) {
                 var angle = 2f * i / ACOS_VALUE_COUNT;
                 angle -= 1;
@@ -90,12 +102,11 @@ namespace FixedPoint {
                 value = -value;
             }
 
-            var index       = (int) (value >> SHIFT);
-            var doubleIndex = index * 2;
-            var fraction    = (value - (index << SHIFT)) << 9;
-            var a           = SinCosLut[doubleIndex];
-            var b           = SinCosLut[doubleIndex + 2];
-            var v2          = a + (((b - a) * fraction) >> PRECISION);
+            var index    = (int) (value >> SHIFT);
+            var fraction = (value - (index << SHIFT)) << 9;
+            var a        = SinLut[index];
+            var b        = SinLut[index + 1];
+            var v2       = a + (((b - a) * fraction) >> PRECISION);
             return v2;
         }
 
@@ -104,22 +115,23 @@ namespace FixedPoint {
                 value = -value;
             }
 
-            var index       = (int) (value >> SHIFT);
-            var doubleIndex = index * 2;
-            var fraction    = (value - (index << SHIFT)) << 9;
-            var a           = SinCosLut[doubleIndex + 1];
-            var b           = SinCosLut[doubleIndex + 3];
-            var v2          = a + (((b - a) * fraction) >> PRECISION);
+            value += fp._0_25.value;
+
+            var index    = (int) (value >> SHIFT);
+            var fraction = (value - (index << SHIFT)) << 9;
+            var a        = SinLut[index];
+            var b        = SinLut[index + 1];
+            var v2       = a + (((b - a) * fraction) >> PRECISION);
             return v2;
         }
 
 
         public static long tan(long value) {
             var sign = 1;
-            
+
             if (value < 0) {
                 value = -value;
-                sign = -1;
+                sign  = -1;
             }
 
             var index    = (int) (value >> SHIFT);

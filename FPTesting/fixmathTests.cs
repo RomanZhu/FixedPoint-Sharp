@@ -139,15 +139,7 @@ namespace FPTesting
             var result = fixmath.Sqrt(value);
             result.Should().Be(fp._5);
         }
-        
-        [Test]
-        public void SqrtFastTest()
-        {
-            var value  = fp._5 * fp._5;
-            var result = fixmath.Sqrt(value);
-            result.Should().Be(fp._5);
-        }
-        
+
         [Test]
         public void FloorTest()
         {
