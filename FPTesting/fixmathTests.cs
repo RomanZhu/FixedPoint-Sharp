@@ -12,7 +12,49 @@ namespace FPTesting
             var result = fixmath.Pow2(5);
             result.AsInt.Should().Be(32);
         }
-        
+
+        [Test]
+        public void AtanTest() {
+            var value  = fp._0_95;
+            var result = fixmath.Atan(value);
+            result.AsFloat.Should().BeApproximately(0.759f, 0.001f);
+            
+            value  = -fp.one;
+            result = fixmath.Atan(value);
+            result.AsFloat.Should().BeApproximately(-0.785f, 0.001f);
+            
+            value  = fp.zero;
+            result = fixmath.Atan(value);
+            result.AsFloat.Should().BeApproximately(0f, 0.001f);
+            
+            value  = fp._5;
+            result = fixmath.Atan(value);
+            result.AsFloat.Should().BeApproximately(1.373f, 0.001f);
+            
+            
+            value  = fp._0_25;
+            result = fixmath.Atan(value);
+            result.AsFloat.Should().BeApproximately(0.245f, 0.001f);
+        }
+
+        [Test]
+        public void Atan2Test() {
+            var valueA = fp._0_95;
+            var valueB = fp._0_95;
+            var result = fixmath.Atan2(valueA, valueB);
+            result.AsFloat.Should().BeApproximately(0.785f, 0.001f);
+
+            valueA = fp._0_50;
+            valueB = fp._0_25;
+            result = fixmath.Atan2(valueA, valueB);
+            result.AsFloat.Should().BeApproximately(0.463f, 0.001f);
+            
+            valueA = fp._2;
+            valueB = fp._5;
+            result = fixmath.Atan2(valueA, valueB);
+            result.AsFloat.Should().BeApproximately(1.190f, 0.001f);
+        }
+
         [Test]
         public void TanTest()
         {

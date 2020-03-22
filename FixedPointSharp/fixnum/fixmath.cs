@@ -27,7 +27,7 @@ namespace FixedPoint {
             return new fp(fixlut.tan(num.value));
         }
 
-        /// <param name="num">Angle in radians [-1, 1]</param>
+        /// <param name="num">Cos [-1, 1]</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Acos(fp num) {
             num.value += fixlut.ONE;
@@ -35,12 +35,49 @@ namespace FixedPoint {
             return new fp(fixlut.acos(num.value));
         }
 
-        /// <param name="num">Angle in radians  [-1, 1]</param>
+        /// <param name="num">Sin [-1, 1]</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Asin(fp num) {
             num.value += fixlut.ONE;
             num       *= fp.half;
             return new fp(fixlut.asin(num.value));
+        }
+
+        /// <param name="num">Tan</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp Atan(fp num) {
+            return Atan2(fp.one, num);
+        }
+
+        /// <param name="x">Denominator</param>
+        /// <param name="y">Numerator</param>
+        public static fp Atan2(fp x, fp y) {
+            var t3 = Abs(x);
+            var t1 = Abs(y);
+            var t0 = Max(t3, t1);
+            t1 = Min(t3, t1);
+            t3 = fp.one / t0;
+            t3 = t1 * t3;
+            var t4 = t3 * t3;
+            var number1 = fp.ParseRaw(-883);
+            var number2 = fp.ParseRaw(3767);
+            var number3 = fp.ParseRaw(7945);
+            var number4 = fp.ParseRaw(12821);
+            var number5 = fp.ParseRaw(21822);
+            var number6 = fp.ParseRaw(65536);
+            var number7 = fp.ParseRaw(102943);
+            var number8 = fp.ParseRaw(205887);
+            t0 = number1;
+            t0 = t0 * t4 + number2;
+            t0 = t0 * t4 - number3;
+            t0 = t0 * t4 + number4;
+            t0 = t0 * t4 - number5;
+            t0 = t0 * t4 + number6;
+            t3 = t0 * t3;
+            t3 = Abs(y) > Abs(x) ? number7 - t3 : t3;
+            t3 = x < fp.zero ? number8 - t3 : t3;
+            t3 = y < fp.zero ? -t3 : t3;
+            return t3;
         }
 
         /// <param name="num">Angle in radians</param>
@@ -121,20 +158,12 @@ namespace FixedPoint {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Min(fp a, fp b) {
-            if (a.value < b.value) {
-                return a;
-            }
-
-            return b;
+            return a.value < b.value ? a : b;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Max(fp a, fp b) {
-            if (a.value > b.value) {
-                return a;
-            }
-
-            return b;
+            return a.value > b.value ? a : b;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
