@@ -58,7 +58,7 @@ namespace FixedPoint {
             t1 = Min(t3, t1);
             t3 = fp.one / t0;
             t3 = t1 * t3;
-            var t4 = t3 * t3;
+            var t4      = t3 * t3;
             var number1 = fp.ParseRaw(-883);
             var number2 = fp.ParseRaw(3767);
             var number3 = fp.ParseRaw(7945);
@@ -229,5 +229,32 @@ namespace FixedPoint {
         public static fp Pow2(int power) {
             return fp.ParseRaw(fixlut.ONE << power);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp Exp(fp num) {
+            if (num == fp.zero) return fp.one;
+            if (num == fp.one) return fp.e;
+            if (num.value >= 2097152) return fp.max;
+            if (num.value <= -786432) return fp.zero;
+
+            var neg      = num.value < 0;
+            if (neg) num = -num;
+
+            var result = num + fp.one;
+            var term   = num;
+
+            for (var i = 2; i < 30; i++) {
+                term   *= num / fp.Parse(i);
+                result += term;
+
+                if (term.value < 500 && ((i > 15) || (term.value < 20)))
+                    break;
+            }
+
+            if (neg) result = fp.one / result;
+
+            return result;
+        }
+
     }
 }

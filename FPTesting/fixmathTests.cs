@@ -6,6 +6,20 @@ namespace FPTesting
 {
     public class fixmathTests
     {
+        
+        [Test]
+        public void ExpTest()
+        {
+            var result = fixmath.Exp(-fp._5);
+            result.AsFloat.Should().BeApproximately(0.006f, 0.001f);
+            
+            result = fixmath.Exp(fp._5);
+            result.AsFloat.Should().BeApproximately(148.413f, 0.01f);
+
+            result = fixmath.Exp(fp._5+fp._0_33);
+            result.AsFloat.Should().BeApproximately(206.437f, 1f);
+        }
+        
         [Test]
         public void Pow2Test()
         {
