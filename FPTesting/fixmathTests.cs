@@ -6,6 +6,153 @@ namespace FPTesting
 {
     public class fixmathTests
     {
+        
+        [Test]
+        public void ExpTest()
+        {
+            var result = fixmath.Exp(-fp._5);
+            result.AsFloat.Should().BeApproximately(0.006f, 0.001f);
+            
+            result = fixmath.Exp(fp._5);
+            result.AsFloat.Should().BeApproximately(148.413f, 0.01f);
+
+            result = fixmath.Exp(fp._5+fp._0_33);
+            result.AsFloat.Should().BeApproximately(206.437f, 1f);
+        }
+        
+        [Test]
+        public void Pow2Test()
+        {
+            var result = fixmath.Pow2(5);
+            result.AsInt.Should().Be(32);
+        }
+
+        [Test]
+        public void AtanTest() {
+            var value  = fp._0_95;
+            var result = fixmath.Atan(value);
+            result.AsFloat.Should().BeApproximately(0.759f, 0.001f);
+            
+            value  = -fp.one;
+            result = fixmath.Atan(value);
+            result.AsFloat.Should().BeApproximately(-0.785f, 0.001f);
+            
+            value  = fp.zero;
+            result = fixmath.Atan(value);
+            result.AsFloat.Should().BeApproximately(0f, 0.001f);
+            
+            value  = fp._5;
+            result = fixmath.Atan(value);
+            result.AsFloat.Should().BeApproximately(1.373f, 0.001f);
+            
+            
+            value  = fp._0_25;
+            result = fixmath.Atan(value);
+            result.AsFloat.Should().BeApproximately(0.245f, 0.001f);
+        }
+
+        [Test]
+        public void Atan2Test() {
+            var valueA = fp._0_95;
+            var valueB = fp._0_95;
+            var result = fixmath.Atan2(valueA, valueB);
+            result.AsFloat.Should().BeApproximately(0.785f, 0.001f);
+
+            valueA = fp._0_50;
+            valueB = fp._0_25;
+            result = fixmath.Atan2(valueA, valueB);
+            result.AsFloat.Should().BeApproximately(0.463f, 0.001f);
+            
+            valueA = fp._2;
+            valueB = fp._5;
+            result = fixmath.Atan2(valueA, valueB);
+            result.AsFloat.Should().BeApproximately(1.190f, 0.001f);
+        }
+
+        [Test]
+        public void TanTest()
+        {
+            var value  = fp._0_75;
+            var result = fixmath.Tan(value);
+            result.AsFloat.Should().BeApproximately(0.931f, 0.001f);
+            
+            value  = -fp._0_75;
+            result = fixmath.Tan(value);
+            result.AsFloat.Should().BeApproximately(-0.931f, 0.001f);
+            
+            value  = -fp._1;
+            result = fixmath.Tan(value);
+            result.AsFloat.Should().BeApproximately(-1.557f, 0.001f);
+            
+            value  = fp._0_25;
+            result = fixmath.Tan(value);
+            result.AsFloat.Should().BeApproximately(0.255f, 0.001f);
+            
+            value  = fp._1;
+            result = fixmath.Tan(value);
+            result.AsFloat.Should().BeApproximately(1.557f, 0.001f);
+            
+            value  = fp._0;
+            result = fixmath.Tan(value);
+            result.AsFloat.Should().BeApproximately(0f, 0.001f);
+        }
+        
+        [Test]
+        public void AcosTest()
+        {
+            var value  = fp._0_75;
+            var result = fixmath.Acos(value);
+            result.AsFloat.Should().BeApproximately(0.722f, 0.001f);
+            
+            value  = -fp._0_75;
+            result = fixmath.Acos(value);
+            result.AsFloat.Should().BeApproximately(2.418f, 0.001f);
+            
+            value  = -fp._1;
+            result = fixmath.Acos(value);
+            result.AsFloat.Should().BeApproximately(3.141f, 0.001f);
+            
+            value  = fp._0_25;
+            result = fixmath.Acos(value);
+            result.AsFloat.Should().BeApproximately(1.318f, 0.001f);
+            
+            value  = fp._1;
+            result = fixmath.Acos(value);
+            result.AsFloat.Should().BeApproximately(0f, 0.001f);
+            
+            value  = fp._0;
+            result = fixmath.Acos(value);
+            result.AsFloat.Should().BeApproximately(1.570f, 0.001f);
+        }
+        
+        [Test]
+        public void AsinTest()
+        {
+            var value  = fp._0_75;
+            var result = fixmath.Asin(value);
+            result.AsFloat.Should().BeApproximately(0.848f, 0.001f);
+            
+            value  = -fp._0_75;
+            result = fixmath.Asin(value);
+            result.AsFloat.Should().BeApproximately(-0.848f, 0.001f);
+            
+            value  = -fp._1;
+            result = fixmath.Asin(value);
+            result.AsFloat.Should().BeApproximately(-1.570f, 0.001f);
+            
+            value  = fp._0_25;
+            result = fixmath.Asin(value);
+            result.AsFloat.Should().BeApproximately(0.252f, 0.001f);
+            
+            value  = fp._1;
+            result = fixmath.Asin(value);
+            result.AsFloat.Should().BeApproximately(1.570f, 0.001f);
+            
+            value  = fp._0;
+            result = fixmath.Asin(value);
+            result.AsFloat.Should().BeApproximately(0f, 0.001f);
+        }
+        
         [Test]
         public void CosTest()
         {
@@ -23,11 +170,22 @@ namespace FPTesting
         }
         
         [Test]
-        public void TanTest()
+        public void SinCosTest()
         {
             var value  = fp._0_25;
-            fixmath.SinCosTan(value, out _, out _, out var result);
-            result.AsFloat.Should().BeApproximately(0.255f, 0.001f);
+            fixmath.SinCos(value, out var sin, out var cos);
+            sin.AsFloat.Should().BeApproximately(0.247f, 0.001f);
+            cos.AsFloat.Should().BeApproximately(0.969f, 0.001f);
+        }
+        
+        [Test]
+        public void SinCosTanTest()
+        {
+            var value  = fp._0_25;
+            fixmath.SinCosTan(value, out var sin, out var cos, out var tan);
+            sin.AsFloat.Should().BeApproximately(0.247f, 0.001f);
+            cos.AsFloat.Should().BeApproximately(0.969f, 0.001f);
+            tan.AsFloat.Should().BeApproximately(0.255f, 0.001f);
         }
         
         [Test]
@@ -37,15 +195,7 @@ namespace FPTesting
             var result = fixmath.Sqrt(value);
             result.Should().Be(fp._5);
         }
-        
-        [Test]
-        public void SqrtFastTest()
-        {
-            var value  = fp._5 * fp._5;
-            var result = fixmath.Sqrt(value);
-            result.Should().Be(fp._5);
-        }
-        
+
         [Test]
         public void FloorTest()
         {
