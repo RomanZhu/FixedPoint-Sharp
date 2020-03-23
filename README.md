@@ -1,5 +1,7 @@
 # FixedPoint-Sharp
 
+(LUTs are generated at runtime for now, will get back to pregenerated LUTs after overhaul is done)
+
 ## Features
 - LUT-based trigonometry with lerping
 - 48.16 precision
