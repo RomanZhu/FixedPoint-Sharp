@@ -3,6 +3,26 @@ using System.Runtime.CompilerServices;
 
 namespace FixedPoint {
     public partial struct fixmath {
+        private static readonly fp _atan2Number1;
+        private static readonly fp _atan2Number2;
+        private static readonly fp _atan2Number3;
+        private static readonly fp _atan2Number4;
+        private static readonly fp _atan2Number5;
+        private static readonly fp _atan2Number6;
+        private static readonly fp _atan2Number7;
+        private static readonly fp _atan2Number8;
+
+        static fixmath() {
+            _atan2Number1 = fp.ParseRaw(-883);
+            _atan2Number2 = fp.ParseRaw(3767);
+            _atan2Number3 = fp.ParseRaw(7945);
+            _atan2Number4 = fp.ParseRaw(12821);
+            _atan2Number5 = fp.ParseRaw(21822);
+            _atan2Number6 = fp.ParseRaw(65536);
+            _atan2Number7 = fp.ParseRaw(102943);
+            _atan2Number8 = fp.ParseRaw(205887);
+        }
+
         /// <param name="num">Angle in radians</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Sin(fp num) {
@@ -52,30 +72,24 @@ namespace FixedPoint {
         /// <param name="x">Denominator</param>
         /// <param name="y">Numerator</param>
         public static fp Atan2(fp x, fp y) {
-            var t3 = Abs(x);
-            var t1 = Abs(y);
+            var absX = Abs(x);
+            var absY = Abs(y);
+            var t3 = absX;
+            var t1 = absY;
             var t0 = Max(t3, t1);
             t1 = Min(t3, t1);
             t3 = fp.one / t0;
             t3 = t1 * t3;
             var t4      = t3 * t3;
-            var number1 = fp.ParseRaw(-883);
-            var number2 = fp.ParseRaw(3767);
-            var number3 = fp.ParseRaw(7945);
-            var number4 = fp.ParseRaw(12821);
-            var number5 = fp.ParseRaw(21822);
-            var number6 = fp.ParseRaw(65536);
-            var number7 = fp.ParseRaw(102943);
-            var number8 = fp.ParseRaw(205887);
-            t0 = number1;
-            t0 = t0 * t4 + number2;
-            t0 = t0 * t4 - number3;
-            t0 = t0 * t4 + number4;
-            t0 = t0 * t4 - number5;
-            t0 = t0 * t4 + number6;
+            t0 = _atan2Number1;
+            t0 = t0 * t4 + _atan2Number2;
+            t0 = t0 * t4 - _atan2Number3;
+            t0 = t0 * t4 + _atan2Number4;
+            t0 = t0 * t4 - _atan2Number5;
+            t0 = t0 * t4 + _atan2Number6;
             t3 = t0 * t3;
-            t3 = Abs(y) > Abs(x) ? number7 - t3 : t3;
-            t3 = x < fp.zero ? number8 - t3 : t3;
+            t3 = absY > absX ? _atan2Number7 - t3 : t3;
+            t3 = x < fp.zero ? _atan2Number8 - t3 : t3;
             t3 = y < fp.zero ? -t3 : t3;
             return t3;
         }
@@ -230,7 +244,6 @@ namespace FixedPoint {
             return fp.ParseRaw(fixlut.ONE << power);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Exp(fp num) {
             if (num == fp.zero) return fp.one;
             if (num == fp.one) return fp.e;
