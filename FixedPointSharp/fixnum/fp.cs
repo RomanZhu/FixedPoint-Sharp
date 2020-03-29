@@ -72,6 +72,7 @@ namespace FixedPoint {
         public static readonly fp one_point_zero_one;
         public static readonly fp pi;
         public static readonly fp pi2;
+        public static readonly fp pi_div_4;
         public static readonly fp one_div_pi2;
         public static readonly fp deg2rad;
         public static readonly fp rad2deg;
@@ -148,6 +149,7 @@ namespace FixedPoint {
             epsilon       = new fp(1);
             e             = new fp(178145L);
             one_div_pi2 = one / pi2;
+            pi_div_4 = pi / _4;
         }
 
         internal fp(long v) {
@@ -254,8 +256,7 @@ namespace FixedPoint {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Parse(float value) {
-            value = (float) Math.Round(value, 5);
-            return new fp((long) (value * fixlut.ONE));
+            return new fp((long) (value * fixlut.ONE + 0.5f * (value < 0 ? -1 : 1)));
         }
 
         public static fp Parse(string value) {

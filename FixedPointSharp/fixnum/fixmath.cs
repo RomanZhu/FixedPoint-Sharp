@@ -11,16 +11,49 @@ namespace FixedPoint {
         private static readonly fp _atan2Number6;
         private static readonly fp _atan2Number7;
         private static readonly fp _atan2Number8;
+        private static readonly fp _atan_2Number1;
+        private static readonly fp _atan_2Number2;
+        private static readonly fp _pow2Number1;
+        private static readonly fp _expNumber1;
 
         static fixmath() {
-            _atan2Number1 = fp.ParseRaw(-883);
-            _atan2Number2 = fp.ParseRaw(3767);
-            _atan2Number3 = fp.ParseRaw(7945);
-            _atan2Number4 = fp.ParseRaw(12821);
-            _atan2Number5 = fp.ParseRaw(21822);
-            _atan2Number6 = fp.ParseRaw(65536);
-            _atan2Number7 = fp.ParseRaw(102943);
-            _atan2Number8 = fp.ParseRaw(205887);
+            _expNumber1    = fp.ParseRaw(94548);
+            _pow2Number1   = fp.ParseRaw(177);
+            _atan_2Number1 = fp.ParseRaw(16036);
+            _atan_2Number2 = fp.ParseRaw(4345);
+            _atan2Number1  = fp.ParseRaw(-883);
+            _atan2Number2  = fp.ParseRaw(3767);
+            _atan2Number3  = fp.ParseRaw(7945);
+            _atan2Number4  = fp.ParseRaw(12821);
+            _atan2Number5  = fp.ParseRaw(21822);
+            _atan2Number6  = fp.ParseRaw(65536);
+            _atan2Number7  = fp.ParseRaw(102943);
+            _atan2Number8  = fp.ParseRaw(205887);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp Pow2(fp num) {
+            if (num.value > 1638400) {
+                return fp.max;
+            }
+
+            var i = num.AsInt;
+            num =  Fractions(num) * _pow2Number1 + fp.one;
+            num *= num;
+            num *= num;
+            num *= num;
+            num *= num;
+            num *= num;
+            num *= num;
+            num *= num;
+            return num * num * fp.Parse(1 << i);
+        }
+
+        ///Approximate version of Exp
+        /// <param name="num">[0, 24]</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp Exp_2(fp num) {
+            return Pow2(num * _expNumber1);
         }
 
         /// <param name="num">Angle in radians</param>
@@ -66,21 +99,29 @@ namespace FixedPoint {
         /// <param name="num">Tan</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Atan(fp num) {
-            return Atan2(fp.one, num);
+            return Atan2(num, fp.one);
+        }
+
+        /// <param name="num">Tan [-1, 1]</param>
+        /// Max error ~0.0015
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp Atan_2(fp num) {
+            var absX = Abs(num);
+            return fp.pi_div_4 * num - num * (absX - fp._1) * (_atan_2Number1 + _atan_2Number2 * absX);
         }
 
         /// <param name="x">Denominator</param>
         /// <param name="y">Numerator</param>
-        public static fp Atan2(fp x, fp y) {
+        public static fp Atan2(fp y, fp x) {
             var absX = Abs(x);
             var absY = Abs(y);
-            var t3 = absX;
-            var t1 = absY;
-            var t0 = Max(t3, t1);
+            var t3   = absX;
+            var t1   = absY;
+            var t0   = Max(t3, t1);
             t1 = Min(t3, t1);
             t3 = fp.one / t0;
             t3 = t1 * t3;
-            var t4      = t3 * t3;
+            var t4 = t3 * t3;
             t0 = _atan2Number1;
             t0 = t0 * t4 + _atan2Number2;
             t0 = t0 * t4 - _atan2Number3;
@@ -114,7 +155,6 @@ namespace FixedPoint {
             tan = fp.ParseRaw(tanVal);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Sqrt(fp num) {
             fp r;
 
@@ -268,6 +308,5 @@ namespace FixedPoint {
 
             return result;
         }
-
     }
 }
