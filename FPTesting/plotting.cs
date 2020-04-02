@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using FixedPoint;
 using NUnit.Framework;
 
@@ -34,11 +35,13 @@ namespace FPTesting {
             plt.PlotScatter(tans.ToArray(), correctValue.ToArray(), Color.CadetBlue, 0.01f, 1, "Math.Atan");
             plt.PlotScatter(tans.ToArray(), approxValue1.ToArray(), Color.Firebrick, 0.01f, 1f, "fixmath.Atan");
             plt.PlotScatter(tans.ToArray(), approxValue2.ToArray(), Color.FromArgb(74, 178, 67), 0.01f, 1, "fixmath.Atan_2");
+            plt.AxisAuto();
             plt.SaveFig("Atan.png");
             
             plt = new ScottPlot.Plot(2048, 2048);
             plt.PlotScatter(tans.ToArray(), approxValueError1.ToArray(), Color.Firebrick,             0.01f, 1f, "fixmath.Atan");
             plt.PlotScatter(tans.ToArray(), approxValueError2.ToArray(), Color.FromArgb(74, 178, 67), 0.01f, 1,  "fixmath.Atan_2");
+            plt.AxisAuto();
             plt.SaveFig("Atan_error.png");
         }
         
@@ -64,10 +67,12 @@ namespace FPTesting {
             var plt = new ScottPlot.Plot(2048, 2048);
             plt.PlotScatter(xValues.ToArray(), correctValue.ToArray(), Color.CadetBlue,             0.01f, 1,  "Math.Atan2");
             plt.PlotScatter(xValues.ToArray(), approxValue1.ToArray(), Color.Firebrick,             0.01f, 1f, "fixmath.Atan2");
+            plt.AxisAuto();
             plt.SaveFig("Atan2.png");
             
             plt = new ScottPlot.Plot(2048, 2048);
             plt.PlotScatter(xValues.ToArray(), approxValueError1.ToArray(), Color.Firebrick,             0.01f, 1f, "fixmath.Atan2");
+            plt.AxisAuto();
             plt.SaveFig("Atan2_error.png");
         }
         
@@ -76,11 +81,11 @@ namespace FPTesting {
             var xValues           = new List<double>();
             var correctValue      = new List<double>();
             var approxValue1 = new List<double>();
-          //  var approxValue2 = new List<double>();
+            var approxValue2 = new List<double>();
             var approxValueError1 = new List<double>();
-           // var approxValueError2 = new List<double>();
-            for (var i = 1; i < 2000; i++) {
-                var val = i * 4;
+            var approxValueError2 = new List<double>();
+            for (var i = 0; i < 2000; i++) {
+                var val = i / 500f;
                 xValues.Add(val);
             }
  
@@ -91,20 +96,25 @@ namespace FPTesting {
                 approxValue1.Add(aprox1Val);
                 approxValueError1.Add(correctVal - aprox1Val);
 
-                // var aprox2Val = fixmath.Sqrt_2(fp.Parse((float) val)).AsDouble;
-                // approxValue2.Add(aprox2Val);
-                // approxValueError2.Add(correctVal - aprox2Val);
+                var aprox2Val = fixmath.Sqrt_2(fp.Parse((float) val)).AsDouble;
+                approxValue2.Add(aprox2Val);
+                approxValueError2.Add(correctVal - aprox2Val);
             }
 
+            double maxError = approxValueError1.Max(d => d);
+            double maxError2 = approxValueError2.Max(d => d);
+
             var plt = new ScottPlot.Plot(2048, 2048);
-            plt.PlotScatter(xValues.ToArray(), correctValue.ToArray(), Color.CadetBlue, 0.01f, 1,  "Math.Sqrt");
-            plt.PlotScatter(xValues.ToArray(), approxValue1.ToArray(), Color.Firebrick, 0.01f, 1f, "fixmath.Sqrt");
-           // plt.PlotScatter(xValues.ToArray(), approxValue2.ToArray(), Color.FromArgb(82, 178, 67), 0.01f, 1f, "fixmath.Sqrt_2");
+            plt.PlotScatter(xValues.ToArray(), correctValue.ToArray(), Color.CadetBlue, 0.01, 1,  "Math.Sqrt");
+            plt.PlotScatter(xValues.ToArray(), approxValue1.ToArray(), Color.Firebrick, 0.01, 1f, "fixmath.Sqrt");
+            plt.PlotScatter(xValues.ToArray(), approxValue2.ToArray(), Color.FromArgb(82, 178, 67), 0.01f, 1f, "fixmath.Sqrt_2");
+            plt.AxisAuto();
             plt.SaveFig("Sqrt.png");
             
             plt = new ScottPlot.Plot(2048, 2048);
             plt.PlotScatter(xValues.ToArray(), approxValueError1.ToArray(), Color.Firebrick, 0.01f, 1f, "fixmath.Sqrt");
-          //  plt.PlotScatter(xValues.ToArray(), approxValueError2.ToArray(), Color.FromArgb(82, 178, 67), 0.01f, 1f, "fixmath.Sqrt_2");
+            plt.PlotScatter(xValues.ToArray(), approxValueError2.ToArray(), Color.FromArgb(82, 178, 67), 0.01f, 1f, "fixmath.Sqrt_2");
+            plt.AxisAuto();
             plt.SaveFig("Sqrt_error.png");
         }
         
@@ -131,10 +141,12 @@ namespace FPTesting {
             var plt = new ScottPlot.Plot(2048, 2048);
             plt.PlotScatter(xValues.ToArray(), correctValue.ToArray(), Color.CadetBlue, 0.01f, 1,  "Math.Pow2");
             plt.PlotScatter(xValues.ToArray(), approxValue2.ToArray(), Color.FromArgb(82, 178, 67), 0.01f, 1f, "fixmath.Pow2_2");
+            plt.AxisAuto();
             plt.SaveFig("Pow2.png");
             
             plt = new ScottPlot.Plot(2048, 2048);
             plt.PlotScatter(xValues.ToArray(), approxValueError2.ToArray(), Color.FromArgb(82, 178, 67), 0.01f, 1f, "fixmath.Pow2_2");
+            plt.AxisAuto();
             plt.SaveFig("Pow2_error.png");
         }
         

@@ -176,6 +176,10 @@ namespace FixedPoint {
             return r;
         }
 
+        public static fp Sqrt_2(fp num) {
+            return num.value <= 0 ? fp.zero : fp.ParseRaw(fixlut._sqrtufp16p16lut(num.value));
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Floor(fp num) {
             return fp.Parse(num.AsLong);
