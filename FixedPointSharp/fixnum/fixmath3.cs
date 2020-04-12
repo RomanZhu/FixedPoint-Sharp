@@ -174,31 +174,8 @@ namespace FixedPoint
                 ((v.x.value * v.x.value) >> fixlut.PRECISION) +
                 ((v.y.value * v.y.value) >> fixlut.PRECISION) +
                 ((v.z.value * v.z.value) >> fixlut.PRECISION);
-
-            fp r1;
-
-            //manually inlined Sqrt()
-            if (r.value == 0)
-            {
-                r1.value = 0;
-            }
-            else
-            {
-                var b = (r.value >> 1) + 1L;
-                var c = (b + (r.value / b)) >> 1;
-
-                while (c < b)
-                {
-                    b = c;
-                    c = (b + (r.value / b)) >> 1;
-                }
-
-                r1.value = b << (fixlut.PRECISION >> 1);
-            }
-
-            r = r1;
-
-            return r;
+            
+            return Sqrt(r);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -236,10 +213,8 @@ namespace FixedPoint
         {
             if (v == fp3.zero)
                 return fp3.zero;
-
-            var magnitude = Magnitude(v);
-
-            return v / magnitude;
+            
+            return v /  Magnitude(v);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -85,7 +85,7 @@ namespace FPTesting {
             var approxValueError1 = new List<double>();
             var approxValueError2 = new List<double>();
             for (var i = 0; i < 2000; i++) {
-                var val = i / 500f;
+                var val = 0 + i * 0.1;
                 xValues.Add(val);
             }
  
@@ -101,19 +101,16 @@ namespace FPTesting {
                 approxValueError2.Add(correctVal - aprox2Val);
             }
 
-            double maxError = approxValueError1.Max(d => d);
-            double maxError2 = approxValueError2.Max(d => d);
-
             var plt = new ScottPlot.Plot(2048, 2048);
             plt.PlotScatter(xValues.ToArray(), correctValue.ToArray(), Color.CadetBlue, 0.01, 1,  "Math.Sqrt");
             plt.PlotScatter(xValues.ToArray(), approxValue1.ToArray(), Color.Firebrick, 0.01, 1f, "fixmath.Sqrt");
-            plt.PlotScatter(xValues.ToArray(), approxValue2.ToArray(), Color.FromArgb(82, 178, 67), 0.01f, 1f, "fixmath.Sqrt_2");
+            plt.PlotScatter(xValues.ToArray(), approxValue2.ToArray(), Color.FromArgb(178, 8, 166), 0.01f, 1f, "fixmath.Sqrt_2");
             plt.AxisAuto();
             plt.SaveFig("Sqrt.png");
             
             plt = new ScottPlot.Plot(2048, 2048);
             plt.PlotScatter(xValues.ToArray(), approxValueError1.ToArray(), Color.Firebrick, 0.01f, 1f, "fixmath.Sqrt");
-            plt.PlotScatter(xValues.ToArray(), approxValueError2.ToArray(), Color.FromArgb(82, 178, 67), 0.01f, 1f, "fixmath.Sqrt_2");
+            plt.PlotScatter(xValues.ToArray(), approxValueError2.ToArray(), Color.FromArgb(178, 8, 166), 0.01f, 1f, "fixmath.Sqrt_2");
             plt.AxisAuto();
             plt.SaveFig("Sqrt_error.png");
         }

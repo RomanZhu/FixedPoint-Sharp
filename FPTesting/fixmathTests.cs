@@ -1,4 +1,7 @@
-﻿using FixedPoint;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using FixedPoint;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -215,10 +218,14 @@ namespace FPTesting {
         }
         
         [Test]
-            public void Sqrt_2Test() {
+        public void Sqrt_2Test() {
             var value  = fp._5 * fp._5;
-            var result = fixmath.Sqrt_2(fp.Parse(0.125f));
-            result.Should().Be(fp._5);
+            var result = fixmath.Sqrt_2(value);
+            result.AsFloat.Should().BeApproximately(5f, 0.01f);
+            
+            value  = fp.Parse(0.01f);
+            result = fixmath.Sqrt_2(value);
+            result.AsFloat.Should().BeApproximately(0.1f, 0.001f);
         }
 
         [Test]
