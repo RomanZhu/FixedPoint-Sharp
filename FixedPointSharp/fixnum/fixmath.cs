@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace FixedPoint {
     public partial struct fixmath {
@@ -15,6 +14,8 @@ namespace FixedPoint {
         private static readonly fp _atan_2Number2;
         private static readonly fp _pow2Number1;
         private static readonly fp _expNumber1;
+        private static readonly byte[] _clzLookup2 = {0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30, 8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31};
+
 
         static fixmath() {
             _expNumber1    = fp.ParseRaw(94548);
@@ -29,6 +30,21 @@ namespace FixedPoint {
             _atan2Number6  = fp.ParseRaw(65536);
             _atan2Number7  = fp.ParseRaw(102943);
             _atan2Number8  = fp.ParseRaw(205887);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int BitScanReverse(uint num) {
+            num |= num >> 1;
+            num |= num >> 2;
+            num |= num >> 4;
+            num |= num >> 8;
+            num |= num >> 16;
+            return _clzLookup2[(num * 0x07C4ACDDU) >> 27];
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int CountLeadingZeroes(uint num) {
+            return num == 0 ? 32 : BitScanReverse(num) ^ 31;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -52,7 +68,7 @@ namespace FixedPoint {
         ///Approximate version of Exp
         /// <param name="num">[0, 24]</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Exp_2(fp num) {
+        public static fp ExpApproximated(fp num) {
             return Pow2(num * _expNumber1);
         }
 
@@ -105,7 +121,7 @@ namespace FixedPoint {
         /// <param name="num">Tan [-1, 1]</param>
         /// Max error ~0.0015
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Atan_2(fp num) {
+        public static fp AtanApproximated(fp num) {
             var absX = Abs(num);
             return fp.pi_div_4 * num - num * (absX - fp._1) * (_atan_2Number1 + _atan_2Number2 * absX);
         }

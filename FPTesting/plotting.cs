@@ -26,7 +26,7 @@ namespace FPTesting {
                 var aprox1Tan = fixmath.Atan(fp.Parse((float) tan)).AsDouble;
                 approxValue1.Add(aprox1Tan);
                 approxValueError1.Add(correctTan - aprox1Tan);
-                var aprox2Tan = fixmath.Atan_2(fp.Parse((float) tan)).AsDouble;
+                var aprox2Tan = fixmath.AtanApproximated(fp.Parse((float) tan)).AsDouble;
                 approxValue2.Add(aprox2Tan);
                 approxValueError2.Add(correctTan - aprox2Tan);
             }
@@ -165,7 +165,7 @@ namespace FPTesting {
                 var correctVal = Math.Exp(val);
                 correctValue.Add(correctVal);
 
-                var aprox2Val = fixmath.Exp_2(fp.Parse((float) val)).AsDouble;
+                var aprox2Val = fixmath.ExpApproximated(fp.Parse((float) val)).AsDouble;
                 approxValue2.Add(aprox2Val);
                 approxValueError2.Add(correctVal - aprox2Val);
 

@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Numerics;
 using FixedPoint;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace FPTesting {
     public class fixmathTests {
+
+        [Test]
+        public void CountLeadingZerosTest() {
+            fixmath.CountLeadingZeroes(5435345).Should().Be(9);
+            fixmath.CountLeadingZeroes(4).Should().Be(29);
+        }
+        
         [Test]
         public void ExpTest() {
             var result = fixmath.Exp(-fp._5);
@@ -21,10 +26,10 @@ namespace FPTesting {
 
         [Test]
         public void Exp_2Test() {
-            var result = fixmath.Exp_2(fp._5);
+            var result = fixmath.ExpApproximated(fp._5);
             result.AsFloat.Should().BeApproximately(148.413f, 0.6f);
 
-            result = fixmath.Exp_2(fp._5 + fp._0_33);
+            result = fixmath.ExpApproximated(fp._5 + fp._0_33);
             result.AsFloat.Should().BeApproximately(206.437f, 1f);
         }
 
@@ -40,19 +45,19 @@ namespace FPTesting {
         [Test]
         public void Atan_2Test() {
             var value  = fp._0_95;
-            var result = fixmath.Atan_2(value);
+            var result = fixmath.AtanApproximated(value);
             result.AsFloat.Should().BeApproximately(0.759f, 0.01f);
 
             value  = -fp.one;
-            result = fixmath.Atan_2(value);
+            result = fixmath.AtanApproximated(value);
             result.AsFloat.Should().BeApproximately(-0.785f, 0.01f);
 
             value  = fp.zero;
-            result = fixmath.Atan_2(value);
+            result = fixmath.AtanApproximated(value);
             result.AsFloat.Should().BeApproximately(0f, 0.01f);
 
             value  = fp._0_25;
-            result = fixmath.Atan_2(value);
+            result = fixmath.AtanApproximated(value);
             result.AsFloat.Should().BeApproximately(0.245f, 0.01f);
         }
 
