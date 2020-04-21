@@ -5,27 +5,9 @@ using System.Runtime.InteropServices;
 namespace FixedPoint
 {
     [Serializable]
+    [StructLayout(LayoutKind.Explicit)]
     public struct fp2 : IEquatable<fp2>
     {
-        public class EqualityComparer : IEqualityComparer<fp2>
-        {
-            public static readonly EqualityComparer instance = new EqualityComparer();
-
-            EqualityComparer()
-            {
-            }
-
-            bool IEqualityComparer<fp2>.Equals(fp2 x, fp2 y)
-            {
-                return x == y;
-            }
-
-            int IEqualityComparer<fp2>.GetHashCode(fp2 obj)
-            {
-                return obj.GetHashCode();
-            }
-        }
-
         public static readonly fp2 left  = new fp2(-fp.one, fp.zero);
         public static readonly fp2 right = new fp2(+fp.one, fp.zero);
         public static readonly fp2 up    = new fp2(fp.zero, +fp.one);
@@ -33,7 +15,9 @@ namespace FixedPoint
         public static readonly fp2 one   = new fp2(fp.one,  fp.one);
         public static readonly fp2 zero  = new fp2(fp.zero, fp.zero);
 
+        [FieldOffset(0)]
         public fp x;
+        [FieldOffset(sizeof(long))]
         public fp y;
 
         public fp2(fp x, fp y)
@@ -161,6 +145,25 @@ namespace FixedPoint
         public override string ToString()
         {
             return $"({x}, {y})";
+        }
+        
+        public class EqualityComparer : IEqualityComparer<fp2>
+        {
+            public static readonly EqualityComparer instance = new EqualityComparer();
+
+            EqualityComparer()
+            {
+            }
+
+            bool IEqualityComparer<fp2>.Equals(fp2 x, fp2 y)
+            {
+                return x == y;
+            }
+
+            int IEqualityComparer<fp2>.GetHashCode(fp2 obj)
+            {
+                return obj.GetHashCode();
+            }
         }
     }
 }

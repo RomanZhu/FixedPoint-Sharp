@@ -96,7 +96,7 @@ namespace FPTesting {
                 approxValue1.Add(aprox1Val);
                 approxValueError1.Add(correctVal - aprox1Val);
 
-                var aprox2Val = fixmath.Sqrt_2(fp.Parse((float) val)).AsDouble;
+                var aprox2Val = fixmath.SqrtApproximated(fp.Parse((float) val)).AsDouble;
                 approxValue2.Add(aprox2Val);
                 approxValueError2.Add(correctVal - aprox2Val);
             }

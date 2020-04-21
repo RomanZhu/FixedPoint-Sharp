@@ -1,34 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace FixedPoint {
     [Serializable]
-    public struct fp : IEquatable<fp>, IComparable<fp> {
-        public class Comparer : IComparer<fp> {
-            public static readonly Comparer instance = new Comparer();
-
-            Comparer() { }
-
-            int IComparer<fp>.Compare(fp x, fp y) {
-                return x.value.CompareTo(y.value);
-            }
-        }
-
-        public class EqualityComparer : IEqualityComparer<fp> {
-            public static readonly EqualityComparer instance = new EqualityComparer();
-
-            EqualityComparer() { }
-
-            bool IEqualityComparer<fp>.Equals(fp x, fp y) {
-                return x.value == y.value;
-            }
-
-            int IEqualityComparer<fp>.GetHashCode(fp num) {
-                return num.value.GetHashCode();
-            }
-        }
-
+    [StructLayout(LayoutKind.Explicit)]
+    public struct fp : IEquatable<fp>, IComparable<fp> 
+    {
         public static readonly fp min;
         public static readonly fp max;
         public static readonly fp _0;
@@ -80,6 +59,7 @@ namespace FixedPoint {
         public static readonly fp epsilon;
         public static readonly fp e;
 
+        [FieldOffset(0)]
         public long value;
 
         public long   RawLong  => value;
@@ -263,6 +243,30 @@ namespace FixedPoint {
             var doubleValue = double.Parse(value);
             var longValue   = (long) (doubleValue * fixlut.ONE);
             return new fp(longValue);
+        }
+        
+        public class Comparer : IComparer<fp> {
+            public static readonly Comparer instance = new Comparer();
+
+            Comparer() { }
+
+            int IComparer<fp>.Compare(fp x, fp y) {
+                return x.value.CompareTo(y.value);
+            }
+        }
+
+        public class EqualityComparer : IEqualityComparer<fp> {
+            public static readonly EqualityComparer instance = new EqualityComparer();
+
+            EqualityComparer() { }
+
+            bool IEqualityComparer<fp>.Equals(fp x, fp y) {
+                return x.value == y.value;
+            }
+
+            int IEqualityComparer<fp>.GetHashCode(fp num) {
+                return num.value.GetHashCode();
+            }
         }
     }
 }

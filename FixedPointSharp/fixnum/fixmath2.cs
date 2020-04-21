@@ -5,6 +5,11 @@ namespace FixedPoint
     public partial struct fixmath
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp Sum(fp2 v) {
+            return new fp(v.x.value + v.y.value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp2 Min(fp2 a, fp2 b)
         {
             fp ret;

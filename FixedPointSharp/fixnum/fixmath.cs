@@ -10,18 +10,18 @@ namespace FixedPoint {
         private static readonly fp _atan2Number6;
         private static readonly fp _atan2Number7;
         private static readonly fp _atan2Number8;
-        private static readonly fp _atan_2Number1;
-        private static readonly fp _atan_2Number2;
+        private static readonly fp _atanApproximatedNumber1;
+        private static readonly fp _atanApproximatedNumber2;
         private static readonly fp _pow2Number1;
         private static readonly fp _expNumber1;
-        private static readonly byte[] _clzLookup2 = {0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30, 8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31};
+        private static readonly byte[] _bsrLookup = {0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30, 8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31};
 
 
         static fixmath() {
+            _atanApproximatedNumber1 = fp.ParseRaw(16036);
+            _atanApproximatedNumber2 = fp.ParseRaw(4345);
             _expNumber1    = fp.ParseRaw(94548);
             _pow2Number1   = fp.ParseRaw(177);
-            _atan_2Number1 = fp.ParseRaw(16036);
-            _atan_2Number2 = fp.ParseRaw(4345);
             _atan2Number1  = fp.ParseRaw(-883);
             _atan2Number2  = fp.ParseRaw(3767);
             _atan2Number3  = fp.ParseRaw(7945);
@@ -39,7 +39,7 @@ namespace FixedPoint {
             num |= num >> 4;
             num |= num >> 8;
             num |= num >> 16;
-            return _clzLookup2[(num * 0x07C4ACDDU) >> 27];
+            return _bsrLookup[(num * 0x07C4ACDDU) >> 27];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -123,7 +123,7 @@ namespace FixedPoint {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp AtanApproximated(fp num) {
             var absX = Abs(num);
-            return fp.pi_div_4 * num - num * (absX - fp._1) * (_atan_2Number1 + _atan_2Number2 * absX);
+            return fp.pi_div_4 * num - num * (absX - fp._1) * (_atanApproximatedNumber1 + _atanApproximatedNumber2 * absX);
         }
 
         /// <param name="x">Denominator</param>
@@ -192,7 +192,10 @@ namespace FixedPoint {
             return r;
         }
 
-        public static fp Sqrt_2(fp num) {
+        /// <summary>
+        /// LUT-based SQRT, faster than original, when value > 5. Not enough precision for normalization.
+        /// </summary>
+        public static fp SqrtApproximated(fp num) {
             return num.value <= 0 ? fp.zero : fp.ParseRaw(fixlut.sqrt(num.value));
         }
 

@@ -1,29 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace FixedPoint
 {
+    [Serializable]
+    [StructLayout(LayoutKind.Explicit)]
     public struct fp3 : IEquatable<fp3>
     {
-        public class EqualityComparer : IEqualityComparer<fp3>
-        {
-            public static readonly EqualityComparer instance = new EqualityComparer();
-
-            EqualityComparer()
-            {
-            }
-
-            bool IEqualityComparer<fp3>.Equals(fp3 x, fp3 y)
-            {
-                return x == y;
-            }
-
-            int IEqualityComparer<fp3>.GetHashCode(fp3 obj)
-            {
-                return obj.GetHashCode();
-            }
-        }
-
         public static readonly fp3 left     = new fp3(-fp.one, fp.zero, fp.zero);
         public static readonly fp3 right    = new fp3(+fp.one, fp.zero, fp.zero);
         public static readonly fp3 up       = new fp3(fp.zero, +fp.one, fp.zero);
@@ -32,8 +16,11 @@ namespace FixedPoint
         public static readonly fp3 one      = new fp3(fp.one,  fp.one,  fp.one);
         public static readonly fp3 zero     = new fp3(fp.zero, fp.zero, fp.zero);
 
+        [FieldOffset(0)]
         public fp x;
+        [FieldOffset(sizeof(long))]
         public fp y;
+        [FieldOffset(sizeof(long)*2)]
         public fp z;
 
         public fp3(fp x, fp y, fp z)
@@ -107,6 +94,17 @@ namespace FixedPoint
 
             return a;
         }
+        
+        public static fp3 operator *(fp3 a, fp3 b)
+        {
+            fp3 r;
+
+            r.x.value = ((a.x.value * b.x.value) >> fixlut.PRECISION);
+            r.y.value = ((a.y.value * b.y.value) >> fixlut.PRECISION);
+            r.z.value = ((a.z.value * b.z.value) >> fixlut.PRECISION);
+
+            return r;
+        }
 
         public static fp3 operator *(fp3 a, fp b)
         {
@@ -126,6 +124,17 @@ namespace FixedPoint
             r.x.value = ((a.x.value * b.value) >> fixlut.PRECISION);
             r.y.value = ((a.y.value * b.value) >> fixlut.PRECISION);
             r.z.value = ((a.z.value * b.value) >> fixlut.PRECISION);
+
+            return r;
+        }
+        
+        public static fp3 operator /(fp3 a, fp3 b)
+        {
+            fp3 r;
+
+            r.x.value = ((a.x.value << fixlut.PRECISION) / b.x.value);
+            r.y.value = ((a.y.value << fixlut.PRECISION) / b.y.value);
+            r.z.value = ((a.z.value << fixlut.PRECISION) / b.z.value);
 
             return r;
         }
@@ -187,6 +196,25 @@ namespace FixedPoint
         public override string ToString()
         {
             return $"({x}, {y}, {z})";
+        }
+        
+        public class EqualityComparer : IEqualityComparer<fp3>
+        {
+            public static readonly EqualityComparer instance = new EqualityComparer();
+
+            EqualityComparer()
+            {
+            }
+
+            bool IEqualityComparer<fp3>.Equals(fp3 x, fp3 y)
+            {
+                return x == y;
+            }
+
+            int IEqualityComparer<fp3>.GetHashCode(fp3 obj)
+            {
+                return obj.GetHashCode();
+            }
         }
     }
 }

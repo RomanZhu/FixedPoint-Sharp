@@ -225,11 +225,11 @@ namespace FPTesting {
         [Test]
         public void Sqrt_2Test() {
             var value  = fp._5 * fp._5;
-            var result = fixmath.Sqrt_2(value);
+            var result = fixmath.SqrtApproximated(value);
             result.AsFloat.Should().BeApproximately(5f, 0.01f);
             
             value  = fp.Parse(0.01f);
-            result = fixmath.Sqrt_2(value);
+            result = fixmath.SqrtApproximated(value);
             result.AsFloat.Should().BeApproximately(0.1f, 0.001f);
         }
 
