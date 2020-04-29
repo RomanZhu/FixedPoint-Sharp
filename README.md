@@ -1,7 +1,5 @@
 # FixedPoint-Sharp
 
-(LUTs are generated at runtime for now, will get back to pregenerated LUTs after overhaul is done)
-
 ## Features
 - LUT-based trigonometry with lerping
 - 48.16 precision
@@ -9,7 +7,3 @@
 - 1D, 2D, 3D math
 - Random generator for fp, int and bool (Vector types will be added a bit later)
 - A huge pile of tests
-
-## WIP
-- Matrix, Quaternion type
-- Transformation math
