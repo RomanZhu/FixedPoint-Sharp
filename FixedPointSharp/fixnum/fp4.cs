@@ -135,12 +135,13 @@ namespace FixedPoint {
         public static fp4 operator %(fp lhs, fp4 rhs) {
             return new fp4(lhs % rhs.x, lhs % rhs.y, lhs % rhs.z, lhs % rhs.w);
         }
-
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(fp4 a, fp4 b) {
             return a.x.value == b.x.value && a.y.value == b.y.value && a.z.value == b.z.value && a.w.value == b.w.value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(fp4 a, fp4 b) {
             return a.x.value != b.x.value || a.y.value != b.y.value || a.z.value != b.z.value || a.w.value != b.w.value;
         }
