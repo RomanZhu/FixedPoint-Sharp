@@ -18,15 +18,7 @@ namespace FixedPoint
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Dot(fp3 a, fp3 b)
         {
-            var x = ((a.x.value * b.x.value) >> fixlut.PRECISION);
-            var y = ((a.y.value * b.y.value) >> fixlut.PRECISION);
-            var z = ((a.z.value * b.z.value) >> fixlut.PRECISION);
-
-            fp r;
-
-            r.value = x + y + z;
-
-            return r;
+            return new fp(((a.x.value * b.x.value) >> fixlut.PRECISION) + ((a.y.value * b.y.value) >> fixlut.PRECISION) + ((a.z.value * b.z.value) >> fixlut.PRECISION));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

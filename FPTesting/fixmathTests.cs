@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using FixedPoint;
 using FluentAssertions;
 using NUnit.Framework;
@@ -213,6 +214,17 @@ namespace FPTesting {
             sin.AsFloat.Should().BeApproximately(0.247f, 0.001f);
             cos.AsFloat.Should().BeApproximately(0.969f, 0.001f);
             tan.AsFloat.Should().BeApproximately(0.255f, 0.001f);
+        }
+        
+        [Test]
+        public void RcpTest() {
+            var value = fp._0_25;
+            var result = fixmath.Rcp(value);
+            result.Should().Be(fp._4);
+            
+            value = fp._4;
+            result = fixmath.Rcp(value);
+            result.Should().Be(fp._0_25);
         }
 
         [Test]

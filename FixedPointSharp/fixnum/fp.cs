@@ -6,8 +6,7 @@ using System.Runtime.InteropServices;
 namespace FixedPoint {
     [Serializable]
     [StructLayout(LayoutKind.Explicit)]
-    public struct fp : IEquatable<fp>, IComparable<fp> 
-    {
+    public struct fp : IEquatable<fp>, IComparable<fp> {
         public static readonly fp min;
         public static readonly fp max;
         public static readonly fp _0;
@@ -128,20 +127,23 @@ namespace FixedPoint {
             rad_90degrees = pi * half;
             epsilon       = new fp(1);
             e             = new fp(178145L);
-            one_div_pi2 = one / pi2;
-            pi_div_4 = pi / _4;
+            one_div_pi2   = one / pi2;
+            pi_div_4      = pi / _4;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal fp(long v) {
             value = v;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp operator -(fp a) {
             fp r;
             r.value = -a.value;
             return r;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp operator +(fp a) {
             fp r;
             r.value = +a.value;
@@ -149,56 +151,67 @@ namespace FixedPoint {
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp operator +(fp a, fp b) {
             fp r;
             r.value = a.value + b.value;
             return r;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp operator -(fp a, fp b) {
             fp r;
             r.value = a.value - b.value;
             return r;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp operator *(fp a, fp b) {
             fp r;
             r.value = (a.value * b.value) >> fixlut.PRECISION;
             return r;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp operator /(fp a, fp b) {
             fp r;
             r.value = (a.value << fixlut.PRECISION) / b.value;
             return r;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp operator %(fp a, fp b) {
             fp r;
             r.value = a.value % b.value;
             return r;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator <(fp a, fp b) {
             return a.value < b.value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator <=(fp a, fp b) {
             return a.value <= b.value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator >(fp a, fp b) {
             return a.value > b.value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator >=(fp a, fp b) {
             return a.value >= b.value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(fp a, fp b) {
             return a.value == b.value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(fp a, fp b) {
             return a.value != b.value;
         }
@@ -244,11 +257,11 @@ namespace FixedPoint {
             var longValue   = (long) (doubleValue * fixlut.ONE);
             return new fp(longValue);
         }
-        
+
         public class Comparer : IComparer<fp> {
             public static readonly Comparer instance = new Comparer();
 
-            Comparer() { }
+            private Comparer() { }
 
             int IComparer<fp>.Compare(fp x, fp y) {
                 return x.value.CompareTo(y.value);
@@ -258,7 +271,7 @@ namespace FixedPoint {
         public class EqualityComparer : IEqualityComparer<fp> {
             public static readonly EqualityComparer instance = new EqualityComparer();
 
-            EqualityComparer() { }
+            private EqualityComparer() { }
 
             bool IEqualityComparer<fp>.Equals(fp x, fp y) {
                 return x.value == y.value;

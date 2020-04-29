@@ -2,35 +2,19 @@
 
 namespace FixedPoint {
     public partial struct fixmath {
-        private static readonly fp _atan2Number1;
-        private static readonly fp _atan2Number2;
-        private static readonly fp _atan2Number3;
-        private static readonly fp _atan2Number4;
-        private static readonly fp _atan2Number5;
-        private static readonly fp _atan2Number6;
-        private static readonly fp _atan2Number7;
-        private static readonly fp _atan2Number8;
-        private static readonly fp _atanApproximatedNumber1;
-        private static readonly fp _atanApproximatedNumber2;
-        private static readonly fp _pow2Number1;
-        private static readonly fp _expNumber1;
+        private static readonly fp _atan2Number1 = fp.ParseRaw(-883);
+        private static readonly fp _atan2Number2 = fp.ParseRaw(3767);
+        private static readonly fp _atan2Number3 = fp.ParseRaw(7945);
+        private static readonly fp _atan2Number4 = fp.ParseRaw(12821);
+        private static readonly fp _atan2Number5 = fp.ParseRaw(21822);
+        private static readonly fp _atan2Number6 = fp.ParseRaw(65536);
+        private static readonly fp _atan2Number7 = fp.ParseRaw(102943);
+        private static readonly fp _atan2Number8 = fp.ParseRaw(205887);
+        private static readonly fp _atanApproximatedNumber1 = fp.ParseRaw(16036);
+        private static readonly fp _atanApproximatedNumber2 = fp.ParseRaw(4345);
+        private static readonly fp _pow2Number1 = fp.ParseRaw(177);
+        private static readonly fp _expNumber1 = fp.ParseRaw(94548);
         private static readonly byte[] _bsrLookup = {0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30, 8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31};
-
-
-        static fixmath() {
-            _atanApproximatedNumber1 = fp.ParseRaw(16036);
-            _atanApproximatedNumber2 = fp.ParseRaw(4345);
-            _expNumber1    = fp.ParseRaw(94548);
-            _pow2Number1   = fp.ParseRaw(177);
-            _atan2Number1  = fp.ParseRaw(-883);
-            _atan2Number2  = fp.ParseRaw(3767);
-            _atan2Number3  = fp.ParseRaw(7945);
-            _atan2Number4  = fp.ParseRaw(12821);
-            _atan2Number5  = fp.ParseRaw(21822);
-            _atan2Number6  = fp.ParseRaw(65536);
-            _atan2Number7  = fp.ParseRaw(102943);
-            _atan2Number8  = fp.ParseRaw(205887);
-        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int BitScanReverse(uint num) {
@@ -171,6 +155,16 @@ namespace FixedPoint {
             tan = fp.ParseRaw(tanVal);
         }
 
+        public static fp Rcp(fp num) {
+            //(fp.one << 16)
+            return new fp(4294967296 / num.value);
+        }
+        
+        public static fp Rsqrt(fp num) {
+            //(fp.one << 16)
+            return new fp(4294967296 / Sqrt(num).value);
+        }
+
         public static fp Sqrt(fp num) {
             fp r;
 
@@ -289,6 +283,11 @@ namespace FixedPoint {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsOppositeSign(fp a, fp b) {
             return ((a.value ^ b.value) < 0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp SetSameSign(fp target, fp reference) {
+            return IsOppositeSign(target, reference) ? target * fp.minus_one : target;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
