@@ -2,18 +2,18 @@
 
 namespace FixedPoint {
     public partial struct fixmath {
-        private static readonly fp _atan2Number1 = fp.ParseRaw(-883);
-        private static readonly fp _atan2Number2 = fp.ParseRaw(3767);
-        private static readonly fp _atan2Number3 = fp.ParseRaw(7945);
-        private static readonly fp _atan2Number4 = fp.ParseRaw(12821);
-        private static readonly fp _atan2Number5 = fp.ParseRaw(21822);
-        private static readonly fp _atan2Number6 = fp.ParseRaw(65536);
-        private static readonly fp _atan2Number7 = fp.ParseRaw(102943);
-        private static readonly fp _atan2Number8 = fp.ParseRaw(205887);
-        private static readonly fp _atanApproximatedNumber1 = fp.ParseRaw(16036);
-        private static readonly fp _atanApproximatedNumber2 = fp.ParseRaw(4345);
-        private static readonly fp _pow2Number1 = fp.ParseRaw(177);
-        private static readonly fp _expNumber1 = fp.ParseRaw(94548);
+        private static readonly fp _atan2Number1 = new fp(-883);
+        private static readonly fp _atan2Number2 = new fp(3767);
+        private static readonly fp _atan2Number3 = new fp(7945);
+        private static readonly fp _atan2Number4 = new fp(12821);
+        private static readonly fp _atan2Number5 = new fp(21822);
+        private static readonly fp _atan2Number6 = new fp(65536);
+        private static readonly fp _atan2Number7 = new fp(102943);
+        private static readonly fp _atan2Number8 = new fp(205887);
+        private static readonly fp _atanApproximatedNumber1 = new fp(16036);
+        private static readonly fp _atanApproximatedNumber2 = new fp(4345);
+        private static readonly fp _pow2Number1 = new fp(177);
+        private static readonly fp _expNumber1 = new fp(94548);
         private static readonly byte[] _bsrLookup = {0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30, 8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31};
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -38,7 +38,7 @@ namespace FixedPoint {
             }
 
             var i = num.AsInt;
-            num =  Fractions(num) * _pow2Number1 + fp.one;
+            num =  Fractions(num) * _pow2Number1 + fp._1;
             num *= num;
             num *= num;
             num *= num;
@@ -84,7 +84,7 @@ namespace FixedPoint {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Acos(fp num) {
             num.value += fixlut.ONE;
-            num       *= fp.half;
+            num       *= fp._0_50;
             return new fp(fixlut.acos(num.value));
         }
 
@@ -92,14 +92,14 @@ namespace FixedPoint {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Asin(fp num) {
             num.value += fixlut.ONE;
-            num       *= fp.half;
+            num       *= fp._0_50;
             return new fp(fixlut.asin(num.value));
         }
 
         /// <param name="num">Tan</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Atan(fp num) {
-            return Atan2(num, fp.one);
+            return Atan2(num, fp._1);
         }
 
         /// <param name="num">Tan [-1, 1]</param>
@@ -107,7 +107,7 @@ namespace FixedPoint {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp AtanApproximated(fp num) {
             var absX = Abs(num);
-            return fp.pi_div_4 * num - num * (absX - fp._1) * (_atanApproximatedNumber1 + _atanApproximatedNumber2 * absX);
+            return fp.pi_quarter * num - num * (absX - fp._1) * (_atanApproximatedNumber1 + _atanApproximatedNumber2 * absX);
         }
 
         /// <param name="x">Denominator</param>
@@ -119,7 +119,7 @@ namespace FixedPoint {
             var t1   = absY;
             var t0   = Max(t3, t1);
             t1 = Min(t3, t1);
-            t3 = fp.one / t0;
+            t3 = fp._1 / t0;
             t3 = t1 * t3;
             var t4 = t3 * t3;
             t0 = _atan2Number1;
@@ -130,8 +130,8 @@ namespace FixedPoint {
             t0 = t0 * t4 + _atan2Number6;
             t3 = t0 * t3;
             t3 = absY > absX ? _atan2Number7 - t3 : t3;
-            t3 = x < fp.zero ? _atan2Number8 - t3 : t3;
-            t3 = y < fp.zero ? -t3 : t3;
+            t3 = x < fp._0 ? _atan2Number8 - t3 : t3;
+            t3 = y < fp._0 ? -t3 : t3;
             return t3;
         }
 
@@ -140,8 +140,8 @@ namespace FixedPoint {
             num.value %= fp.pi2.value;
             num       *= fp.one_div_pi2;
             fixlut.sin_cos(num.value, out var sinVal, out var cosVal);
-            sin = fp.ParseRaw(sinVal);
-            cos = fp.ParseRaw(cosVal);
+            sin = new fp(sinVal);
+            cos = new fp(cosVal);
         }
 
         /// <param name="num">Angle in radians</param>
@@ -150,9 +150,9 @@ namespace FixedPoint {
             num.value %= fp.pi2.value;
             num       *= fp.one_div_pi2;
             fixlut.sin_cos_tan(num.value, out var sinVal, out var cosVal, out var tanVal);
-            sin = fp.ParseRaw(sinVal);
-            cos = fp.ParseRaw(cosVal);
-            tan = fp.ParseRaw(tanVal);
+            sin = new fp(sinVal);
+            cos = new fp(cosVal);
+            tan = new fp(tanVal);
         }
 
         public static fp Rcp(fp num) {
@@ -190,7 +190,7 @@ namespace FixedPoint {
         /// LUT-based SQRT, faster than original, when value > 5. Not enough precision for normalization.
         /// </summary>
         public static fp SqrtApproximated(fp num) {
-            return num.value <= 0 ? fp.zero : fp.ParseRaw(fixlut.sqrt(num.value));
+            return num.value <= 0 ? fp._0 : new fp(fixlut.sqrt(num.value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -208,7 +208,7 @@ namespace FixedPoint {
 
             var full = new fp(num.value >> fixlut.PRECISION << fixlut.PRECISION);
 
-            return full + fp.one;
+            return full + fp._1;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -220,7 +220,7 @@ namespace FixedPoint {
         public static int RoundToInt(fp num) {
             var fraction = new fp(num.value & 0x000000000000FFFFL);
 
-            if (fraction.value >= fp.half.value) {
+            if (fraction.value >= fp._0_50.value) {
                 return num.AsInt + 1;
             }
 
@@ -258,10 +258,10 @@ namespace FixedPoint {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Clamp01(fp num) {
             if (num.value < 0) {
-                return fp.zero;
+                return fp._0;
             }
 
-            return num.value > fp.one.value ? fp.one : num;
+            return num.value > fp._1.value ? fp._1 : num;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -277,7 +277,7 @@ namespace FixedPoint {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Sign(fp num) {
-            return num.value < fixlut.ZERO ? fp.minus_one : fp.one;
+            return num.value < fixlut.ZERO ? fp.minus_one : fp._1;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -292,19 +292,19 @@ namespace FixedPoint {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Pow2(int power) {
-            return fp.ParseRaw(fixlut.ONE << power);
+            return new fp(fixlut.ONE << power);
         }
 
         public static fp Exp(fp num) {
-            if (num == fp.zero) return fp.one;
-            if (num == fp.one) return fp.e;
+            if (num == fp._0) return fp._1;
+            if (num == fp._1) return fp.e;
             if (num.value >= 2097152) return fp.max;
-            if (num.value <= -786432) return fp.zero;
+            if (num.value <= -786432) return fp._0;
 
             var neg      = num.value < 0;
             if (neg) num = -num;
 
-            var result = num + fp.one;
+            var result = num + fp._1;
             var term   = num;
 
             for (var i = 2; i < 30; i++) {
@@ -315,7 +315,7 @@ namespace FixedPoint {
                     break;
             }
 
-            if (neg) result = fp.one / result;
+            if (neg) result = fp._1 / result;
 
             return result;
         }

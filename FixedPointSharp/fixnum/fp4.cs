@@ -8,17 +8,17 @@ namespace FixedPoint {
         [FieldOffset(0)]
         public fp x;
 
-        [FieldOffset(sizeof(long))]
+        [FieldOffset(8)]
         public fp y;
 
-        [FieldOffset(sizeof(long) * 2)]
+        [FieldOffset(16)]
         public fp z;
 
-        [FieldOffset(sizeof(long) * 3)]
+        [FieldOffset(24)]
         public fp w;
 
         public static readonly fp4 zero;
-        public static readonly fp4 one = new fp4 {x = fp.one, y = fp.one, z = fp.one, w = fp.one};
+        public static readonly fp4 one = new fp4 {x = fp._1, y = fp._1, z = fp._1, w = fp._1};
         public static readonly fp4 minus_one = new fp4 {x = fp.minus_one, y = fp.minus_one, z = fp.minus_one, w = fp.minus_one};
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

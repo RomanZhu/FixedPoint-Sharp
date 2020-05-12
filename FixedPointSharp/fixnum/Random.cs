@@ -64,7 +64,7 @@ namespace FixedPoint {
         /// <summary>Returns value in range [0, 1]</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public fp NextFp() {
-            return fp.ParseRaw(NextInt(0, 65535));
+            return new fp(NextInt(0, 65535));
         }
         
         /// <summary>Returns vector with all components in range [0, 1]</summary>
@@ -143,8 +143,8 @@ namespace FixedPoint {
         
         /// <summary>Returns a normalized 3D direction</summary>
         public fp3 NextDirection3D() {
-            var z = NextFp(fp._2) - fp.one;
-            var r = fixmath.Sqrt(fixmath.Max(fp.one - z * z, fp.zero));
+            var z = NextFp(fp._2) - fp._1;
+            var r = fixmath.Sqrt(fixmath.Max(fp._1 - z * z, fp._0));
             var angle = NextFp(fp.pi2);
             fixmath.SinCos(angle, out var sin, out var cos);
             return new fp3(cos * r, sin * r, z);

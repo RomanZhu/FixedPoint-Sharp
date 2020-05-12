@@ -23,10 +23,10 @@ namespace FPTesting {
             foreach (var tan in tans) {
                 var correctTan = Math.Atan(tan);
                 correctValue.Add(correctTan);
-                var aprox1Tan = fixmath.Atan(fp.Parse((float) tan)).AsDouble;
+                var aprox1Tan = fixmath.Atan(fp.ParseUnsafe((float) tan)).AsDouble;
                 approxValue1.Add(aprox1Tan);
                 approxValueError1.Add(correctTan - aprox1Tan);
-                var aprox2Tan = fixmath.AtanApproximated(fp.Parse((float) tan)).AsDouble;
+                var aprox2Tan = fixmath.AtanApproximated(fp.ParseUnsafe((float) tan)).AsDouble;
                 approxValue2.Add(aprox2Tan);
                 approxValueError2.Add(correctTan - aprox2Tan);
             }
@@ -59,7 +59,7 @@ namespace FPTesting {
             foreach (var tan in xValues) {
                 var correctTan = Math.Atan2(tan, 1);
                 correctValue.Add(correctTan);
-                var aprox1Tan = fixmath.Atan2(fp.Parse((float) tan), fp.one).AsDouble;
+                var aprox1Tan = fixmath.Atan2(fp.ParseUnsafe((float) tan), fp._1).AsDouble;
                 approxValue1.Add(aprox1Tan);
                 approxValueError1.Add(correctTan - aprox1Tan);
             }
@@ -92,11 +92,11 @@ namespace FPTesting {
             foreach (var val in xValues) {
                 var correctVal = Math.Sqrt(val);
                 correctValue.Add(correctVal);
-                var aprox1Val = fixmath.Sqrt(fp.Parse((float) val)).AsDouble;
+                var aprox1Val = fixmath.Sqrt(fp.ParseUnsafe((float) val)).AsDouble;
                 approxValue1.Add(aprox1Val);
                 approxValueError1.Add(correctVal - aprox1Val);
 
-                var aprox2Val = fixmath.SqrtApproximated(fp.Parse((float) val)).AsDouble;
+                var aprox2Val = fixmath.SqrtApproximated(fp.ParseUnsafe((float) val)).AsDouble;
                 approxValue2.Add(aprox2Val);
                 approxValueError2.Add(correctVal - aprox2Val);
             }
@@ -130,7 +130,7 @@ namespace FPTesting {
                 var correctVal = Math.Pow(2, val);
                 correctValue.Add(correctVal);
 
-                var aprox2Val = fixmath.Pow2(fp.Parse((float) val)).AsDouble;
+                var aprox2Val = fixmath.Pow2(fp.ParseUnsafe((float) val)).AsDouble;
                 approxValue2.Add(aprox2Val);
                 approxValueError2.Add(correctVal - aprox2Val);
             }
@@ -165,11 +165,11 @@ namespace FPTesting {
                 var correctVal = Math.Exp(val);
                 correctValue.Add(correctVal);
 
-                var aprox2Val = fixmath.ExpApproximated(fp.Parse((float) val)).AsDouble;
+                var aprox2Val = fixmath.ExpApproximated(fp.ParseUnsafe((float) val)).AsDouble;
                 approxValue2.Add(aprox2Val);
                 approxValueError2.Add(correctVal - aprox2Val);
 
-                var aprox3Val = fixmath.Exp(fp.Parse((float) val)).AsDouble;
+                var aprox3Val = fixmath.Exp(fp.ParseUnsafe((float) val)).AsDouble;
                 approxValue3.Add(aprox3Val);
                 approxValueError3.Add(correctVal - aprox3Val);
             }

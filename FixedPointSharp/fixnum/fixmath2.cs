@@ -430,8 +430,8 @@ namespace FixedPoint
 
             r.value = x + z;
             var dot = r;
-            fp min = -fp.one;
-            fp max = +fp.one;
+            fp min = -fp._1;
+            fp max = +fp._1;
             fp ret;
             if (dot.value < min.value)
             {
@@ -542,8 +542,8 @@ namespace FixedPoint
 
             r.value = x + z;
             var dot = r;
-            fp min = -fp.one;
-            fp max = +fp.one;
+            fp min = -fp._1;
+            fp max = +fp._1;
             fp ret;
             if (dot.value < min.value)
             {
@@ -654,8 +654,8 @@ namespace FixedPoint
 
             r.value = x + z;
             var dot = r;
-            fp min = -fp.one;
-            fp max = +fp.one;
+            fp min = -fp._1;
+            fp max = +fp._1;
             fp ret;
             if (dot.value < min.value)
             {
@@ -674,7 +674,7 @@ namespace FixedPoint
             }
 
             var rad  = new fp(fixlut.acos(ret.value));
-            var sign = ((a.x * b.y - a.y * b.x).value <  fixlut.ZERO) ? fp.minus_one : fp.one;
+            var sign = ((a.x * b.y - a.y * b.x).value <  fixlut.ZERO) ? fp.minus_one : fp._1;
 
             return rad * sign;
         }
@@ -691,8 +691,8 @@ namespace FixedPoint
 
             r.value = x + z;
             var dot = r;
-            fp min = -fp.one;
-            fp max = +fp.one;
+            fp min = -fp._1;
+            fp max = +fp._1;
             fp ret;
             if (dot.value < min.value)
             {
@@ -725,8 +725,8 @@ namespace FixedPoint
 
             r.value = x + z;
             var dot = r;
-            fp min = -fp.one;
-            fp max = +fp.one;
+            fp min = -fp._1;
+            fp max = +fp._1;
             fp ret;
             if (dot.value < min.value)
             {
@@ -745,7 +745,7 @@ namespace FixedPoint
             }
 
             var rad  = new fp(fixlut.acos(ret.value));
-            var sign = ((a.x * b.y - a.y * b.x).value < fixlut.ZERO) ? fp.minus_one : fp.one;
+            var sign = ((a.x * b.y - a.y * b.x).value < fixlut.ZERO) ? fp.minus_one : fp._1;
 
             return rad * sign;
         }
@@ -757,8 +757,8 @@ namespace FixedPoint
 
             fp2 result;
 
-            result.x = vector.x - ((fp.two * dot) * normal.x);
-            result.y = vector.y - ((fp.two * dot) * normal.y);
+            result.x = vector.x - ((fp._2 * dot) * normal.x);
+            result.y = vector.y - ((fp._2 * dot) * normal.y);
 
             return result;
         }

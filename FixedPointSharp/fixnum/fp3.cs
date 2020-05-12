@@ -7,22 +7,22 @@ namespace FixedPoint {
     [Serializable]
     [StructLayout(LayoutKind.Explicit, Size = sizeof(long) * 3)]
     public struct fp3 : IEquatable<fp3> {
-        public static readonly fp3 left     = new fp3(-fp.one, fp.zero, fp.zero);
-        public static readonly fp3 right    = new fp3(+fp.one, fp.zero, fp.zero);
-        public static readonly fp3 up       = new fp3(fp.zero, +fp.one, fp.zero);
-        public static readonly fp3 forward  = new fp3(fp.zero, fp.zero, fp.one);
-        public static readonly fp3 backward = new fp3(fp.zero, fp.zero, fp.minus_one);
-        public static readonly fp3 one = new fp3(fp.one, fp.one, fp.one);
+        public static readonly fp3 left     = new fp3(-fp._1, fp._0, fp._0);
+        public static readonly fp3 right    = new fp3(+fp._1, fp._0, fp._0);
+        public static readonly fp3 up       = new fp3(fp._0, +fp._1, fp._0);
+        public static readonly fp3 forward  = new fp3(fp._0, fp._0, fp._1);
+        public static readonly fp3 backward = new fp3(fp._0, fp._0, fp.minus_one);
+        public static readonly fp3 one = new fp3(fp._1, fp._1, fp._1);
         public static readonly fp3 minus_one = new fp3(fp.minus_one, fp.minus_one, fp.minus_one);
-        public static readonly fp3 zero     = new fp3(fp.zero, fp.zero, fp.zero);
+        public static readonly fp3 zero     = new fp3(fp._0, fp._0, fp._0);
 
         [FieldOffset(0)]
         public fp x;
 
-        [FieldOffset(sizeof(long))]
+        [FieldOffset(8)]
         public fp y;
 
-        [FieldOffset(sizeof(long) * 2)]
+        [FieldOffset(16)]
         public fp z;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

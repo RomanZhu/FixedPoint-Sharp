@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace FixedPoint {
+﻿namespace FixedPoint {
     public static partial class fixlut {
         public const int  FRACTIONS_COUNT = 5;
         public const int  PRECISION       = 16;
@@ -157,7 +154,7 @@ namespace FixedPoint {
                 val2 = (int) SqrtLut36Mil[index + 1];
             }
             else {
-                return fixmath.Sqrt(fp.ParseRaw(value)).value;
+                return fixmath.Sqrt(new fp(value)).value;
             }
 
             return val1 + (fraction * (val2 - val1) >> PRECISION);

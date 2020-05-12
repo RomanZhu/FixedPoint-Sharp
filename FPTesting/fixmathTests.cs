@@ -49,11 +49,11 @@ namespace FPTesting {
             var result = fixmath.AtanApproximated(value);
             result.AsFloat.Should().BeApproximately(0.759f, 0.01f);
 
-            value  = -fp.one;
+            value  = -fp._1;
             result = fixmath.AtanApproximated(value);
             result.AsFloat.Should().BeApproximately(-0.785f, 0.01f);
 
-            value  = fp.zero;
+            value  = fp._0;
             result = fixmath.AtanApproximated(value);
             result.AsFloat.Should().BeApproximately(0f, 0.01f);
 
@@ -68,11 +68,11 @@ namespace FPTesting {
             var result = fixmath.Atan(value);
             result.AsFloat.Should().BeApproximately(0.759f, 0.001f);
 
-            value  = -fp.one;
+            value  = -fp._1;
             result = fixmath.Atan(value);
             result.AsFloat.Should().BeApproximately(-0.785f, 0.001f);
 
-            value  = fp.zero;
+            value  = fp._0;
             result = fixmath.Atan(value);
             result.AsFloat.Should().BeApproximately(0f, 0.001f);
 
@@ -240,7 +240,7 @@ namespace FPTesting {
             var result = fixmath.SqrtApproximated(value);
             result.AsFloat.Should().BeApproximately(5f, 0.01f);
             
-            value  = fp.Parse(0.01f);
+            value  = fp.ParseUnsafe(0.01f);
             result = fixmath.SqrtApproximated(value);
             result.AsFloat.Should().BeApproximately(0.1f, 0.001f);
         }

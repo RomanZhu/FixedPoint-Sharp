@@ -34,7 +34,7 @@ namespace FixedPoint {
         {
             if (v == fp4.zero)
             {
-                magnitude = fp.zero;
+                magnitude = fp._0;
                 return fp4.zero;
             }
 
