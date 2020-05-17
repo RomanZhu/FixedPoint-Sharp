@@ -7,6 +7,8 @@ namespace FixedPoint {
     [Serializable]
     [StructLayout(LayoutKind.Explicit)]
     public struct fp2 : IEquatable<fp2> {
+        public const int SIZE = 16;
+
         public static readonly fp2 left  = new fp2(-fp._1, fp._0);
         public static readonly fp2 right = new fp2(+fp._1, fp._0);
         public static readonly fp2 up    = new fp2(fp._0, +fp._1);

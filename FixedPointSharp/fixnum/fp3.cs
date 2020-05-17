@@ -5,8 +5,10 @@ using System.Runtime.InteropServices;
 
 namespace FixedPoint {
     [Serializable]
-    [StructLayout(LayoutKind.Explicit, Size = sizeof(long) * 3)]
+    [StructLayout(LayoutKind.Explicit)]
     public struct fp3 : IEquatable<fp3> {
+        public const int SIZE = 24;
+
         public static readonly fp3 left     = new fp3(-fp._1, fp._0, fp._0);
         public static readonly fp3 right    = new fp3(+fp._1, fp._0, fp._0);
         public static readonly fp3 up       = new fp3(fp._0, +fp._1, fp._0);

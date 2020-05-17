@@ -8,6 +8,8 @@ namespace FixedPoint {
     [Serializable]
     [StructLayout(LayoutKind.Explicit)]
     public struct fp : IEquatable<fp>, IComparable<fp> {
+        public const int SIZE = 8;
+
         public static readonly fp max = new fp(long.MaxValue);
         public static readonly fp min = new fp(long.MinValue);
         public static readonly fp usable_max = new fp(2147483648L);

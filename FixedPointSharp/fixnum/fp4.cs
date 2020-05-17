@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 namespace FixedPoint {
     [StructLayout(LayoutKind.Explicit)]
     public struct fp4 : IEquatable<fp4> {
+        public const int SIZE = 32;
+
         [FieldOffset(0)]
         public fp x;
 
