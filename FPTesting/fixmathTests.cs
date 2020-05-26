@@ -233,17 +233,6 @@ namespace FPTesting {
             var result = fixmath.Sqrt(value);
             result.Should().Be(fp._5);
         }
-        
-        [Test]
-        public void Sqrt_2Test() {
-            var value  = fp._5 * fp._5;
-            var result = fixmath.SqrtApproximated(value);
-            result.AsFloat.Should().BeApproximately(5f, 0.01f);
-            
-            value  = fp.ParseUnsafe(0.01f);
-            result = fixmath.SqrtApproximated(value);
-            result.AsFloat.Should().BeApproximately(0.1f, 0.001f);
-        }
 
         [Test]
         public void FloorTest() {

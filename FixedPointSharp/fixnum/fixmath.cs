@@ -185,14 +185,7 @@ namespace FixedPoint {
 
             return r;
         }
-
-        /// <summary>
-        /// LUT-based SQRT, faster than original, when value > 5. Not enough precision for normalization.
-        /// </summary>
-        public static fp SqrtApproximated(fp num) {
-            return num.value <= 0 ? fp._0 : new fp(fixlut.sqrt(num.value));
-        }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Floor(fp num) {
             return fp.Parse(num.AsLong);

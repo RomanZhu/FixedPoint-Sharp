@@ -75,46 +75,7 @@ namespace FPTesting {
             plt.AxisAuto();
             plt.SaveFig("Atan2_error.png");
         }
-        
-        [Test]
-        public void Sqrt_Plottting() {
-            var xValues           = new List<double>();
-            var correctValue      = new List<double>();
-            var approxValue1 = new List<double>();
-            var approxValue2 = new List<double>();
-            var approxValueError1 = new List<double>();
-            var approxValueError2 = new List<double>();
-            for (var i = 0; i < 2000; i++) {
-                var val = 0 + i * 0.1;
-                xValues.Add(val);
-            }
- 
-            foreach (var val in xValues) {
-                var correctVal = Math.Sqrt(val);
-                correctValue.Add(correctVal);
-                var aprox1Val = fixmath.Sqrt(fp.ParseUnsafe((float) val)).AsDouble;
-                approxValue1.Add(aprox1Val);
-                approxValueError1.Add(correctVal - aprox1Val);
 
-                var aprox2Val = fixmath.SqrtApproximated(fp.ParseUnsafe((float) val)).AsDouble;
-                approxValue2.Add(aprox2Val);
-                approxValueError2.Add(correctVal - aprox2Val);
-            }
-
-            var plt = new ScottPlot.Plot(2048, 2048);
-            plt.PlotScatter(xValues.ToArray(), correctValue.ToArray(), Color.CadetBlue, 0.01, 1,  "Math.Sqrt");
-            plt.PlotScatter(xValues.ToArray(), approxValue1.ToArray(), Color.Firebrick, 0.01, 1f, "fixmath.Sqrt");
-            plt.PlotScatter(xValues.ToArray(), approxValue2.ToArray(), Color.FromArgb(178, 8, 166), 0.01f, 1f, "fixmath.Sqrt_2");
-            plt.AxisAuto();
-            plt.SaveFig("Sqrt.png");
-            
-            plt = new ScottPlot.Plot(2048, 2048);
-            plt.PlotScatter(xValues.ToArray(), approxValueError1.ToArray(), Color.Firebrick, 0.01f, 1f, "fixmath.Sqrt");
-            plt.PlotScatter(xValues.ToArray(), approxValueError2.ToArray(), Color.FromArgb(178, 8, 166), 0.01f, 1f, "fixmath.Sqrt_2");
-            plt.AxisAuto();
-            plt.SaveFig("Sqrt_error.png");
-        }
-        
         [Test]
         public void Pow_Plottting() {
             var xValues      = new List<double>();
