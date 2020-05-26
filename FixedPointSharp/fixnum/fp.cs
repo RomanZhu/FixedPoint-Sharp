@@ -10,24 +10,26 @@ namespace FixedPoint {
     public struct fp : IEquatable<fp>, IComparable<fp> {
         public const int SIZE = 8;
 
-        public static readonly fp max = new fp(long.MaxValue);
-        public static readonly fp min = new fp(long.MinValue);
+        public static readonly fp max        = new fp(long.MaxValue);
+        public static readonly fp min        = new fp(long.MinValue);
         public static readonly fp usable_max = new fp(2147483648L);
         public static readonly fp usable_min = -usable_max;
-        public static readonly fp _0 = 0;
-        public static readonly fp _1 = 1;
-        public static readonly fp _2 = 2;
-        public static readonly fp _3 = 3;
-        public static readonly fp _4 = 4;
-        public static readonly fp _5 = 5;
-        public static readonly fp _6 = 6;
-        public static readonly fp _7 = 7;
-        public static readonly fp _8 = 8;
-        public static readonly fp _9 = 9;
-        public static readonly fp _10 = 10;
-        public static readonly fp _99 = 99;
+
+        public static readonly fp _0   = 0;
+        public static readonly fp _1   = 1;
+        public static readonly fp _2   = 2;
+        public static readonly fp _3   = 3;
+        public static readonly fp _4   = 4;
+        public static readonly fp _5   = 5;
+        public static readonly fp _6   = 6;
+        public static readonly fp _7   = 7;
+        public static readonly fp _8   = 8;
+        public static readonly fp _9   = 9;
+        public static readonly fp _10  = 10;
+        public static readonly fp _99  = 99;
         public static readonly fp _100 = 100;
         public static readonly fp _200 = 200;
+
         public static readonly fp _0_01 = _1 / _100;
         public static readonly fp _0_02 = _0_01 * 2;
         public static readonly fp _0_03 = _0_01 * 3;
@@ -44,25 +46,26 @@ namespace FixedPoint {
         public static readonly fp _1_01 = _1 + _0_01;
         public static readonly fp _1_10 = _1 + _0_10;
         public static readonly fp _1_50 = _1 + _0_50;
-        public static readonly fp minus_one = -1;
-        public static readonly fp pi = new fp(205887L);
-        public static readonly fp pi2 = pi * 2;
-        public static readonly fp pi_quarter = pi * _0_25;
-        public static readonly fp pi_half = pi * _0_50;
-        public static readonly fp one_div_pi2 = 1/pi2;
-        public static readonly fp deg2rad = new fp(1143L);
-        public static readonly fp rad2deg = new fp(3754936L);
-        public static readonly fp epsilon = new fp(1);
-        public static readonly fp e = new fp(178145L);
+
+        public static readonly fp minus_one   = -1;
+        public static readonly fp pi          = new fp(205887L);
+        public static readonly fp pi2         = pi * 2;
+        public static readonly fp pi_quarter  = pi * _0_25;
+        public static readonly fp pi_half     = pi * _0_50;
+        public static readonly fp one_div_pi2 = 1 / pi2;
+        public static readonly fp deg2rad     = new fp(1143L);
+        public static readonly fp rad2deg     = new fp(3754936L);
+        public static readonly fp epsilon     = new fp(1);
+        public static readonly fp e           = new fp(178145L);
 
         [FieldOffset(0)]
         public long value;
-        
-        public long   AsLong   => value >> fixlut.PRECISION;
-        public int    AsInt    => (int) (value >> fixlut.PRECISION);
-        public float AsFloat => value / 65536f;
-        public float AsFloatRounded => (float) Math.Round(value / 65536f, 5);
-        public double AsDouble => value / 65536d;
+
+        public long   AsLong          => value >> fixlut.PRECISION;
+        public int    AsInt           => (int) (value >> fixlut.PRECISION);
+        public float  AsFloat         => value / 65536f;
+        public float  AsFloatRounded  => (float) Math.Round(value / 65536f, 5);
+        public double AsDouble        => value / 65536d;
         public double AsDoubleRounded => Math.Round(value / 65536d, 5);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -88,17 +91,15 @@ namespace FixedPoint {
             a.value += b.value;
             return a;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp operator +(fp a, int b)
-        {
+        public static fp operator +(fp a, int b) {
             a.value += (long) b << fixlut.PRECISION;
             return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp operator +(int a, fp b)
-        {
+        public static fp operator +(int a, fp b) {
             b.value = ((long) a << fixlut.PRECISION) + b.value;
             return b;
         }
@@ -108,18 +109,16 @@ namespace FixedPoint {
             a.value -= b.value;
             return a;
         }
-        
-        
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp operator -(fp a, int b)
-        {
+        public static fp operator -(fp a, int b) {
             a.value -= (long) b << fixlut.PRECISION;
             return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp operator -(int a, fp b)
-        {
+        public static fp operator -(int a, fp b) {
             b.value = ((long) a << fixlut.PRECISION) - b.value;
             return b;
         }
@@ -129,17 +128,15 @@ namespace FixedPoint {
             a.value = (a.value * b.value) >> fixlut.PRECISION;
             return a;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp operator *(fp a, int b)
-        {
+        public static fp operator *(fp a, int b) {
             a.value *= b;
             return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp operator *(int a, fp b)
-        {
+        public static fp operator *(int a, fp b) {
             b.value *= a;
             return b;
         }
@@ -149,17 +146,15 @@ namespace FixedPoint {
             a.value = (a.value << fixlut.PRECISION) / b.value;
             return a;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp operator /(fp a, int b)
-        {
+        public static fp operator /(fp a, int b) {
             a.value /= b;
             return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp operator /(int a, fp b)
-        {
+        public static fp operator /(int a, fp b) {
             b.value = ((long) a << 32) / b.value;
             return b;
         }
@@ -169,17 +164,15 @@ namespace FixedPoint {
             a.value %= b.value;
             return a;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp operator %(fp a, int b)
-        {
+        public static fp operator %(fp a, int b) {
             a.value %= (long) b << fixlut.PRECISION;
             return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp operator %(int a, fp b)
-        {
+        public static fp operator %(int a, fp b) {
             b.value = ((long) a << fixlut.PRECISION) % b.value;
             return b;
         }
@@ -188,16 +181,14 @@ namespace FixedPoint {
         public static bool operator <(fp a, fp b) {
             return a.value < b.value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator <(fp a, int b)
-        {
+        public static bool operator <(fp a, int b) {
             return a.value < (long) b << fixlut.PRECISION;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator <(int a, fp b)
-        {
+        public static bool operator <(int a, fp b) {
             return (long) a << fixlut.PRECISION < b.value;
         }
 
@@ -205,16 +196,14 @@ namespace FixedPoint {
         public static bool operator <=(fp a, fp b) {
             return a.value <= b.value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator <=(fp a, int b)
-        {
+        public static bool operator <=(fp a, int b) {
             return a.value <= (long) b << fixlut.PRECISION;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator <=(int a, fp b)
-        {
+        public static bool operator <=(int a, fp b) {
             return (long) a << fixlut.PRECISION <= b.value;
         }
 
@@ -222,16 +211,14 @@ namespace FixedPoint {
         public static bool operator >(fp a, fp b) {
             return a.value > b.value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator >(fp a, int b)
-        {
+        public static bool operator >(fp a, int b) {
             return a.value > (long) b << fixlut.PRECISION;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator >(int a, fp b)
-        {
+        public static bool operator >(int a, fp b) {
             return (long) a << fixlut.PRECISION > b.value;
         }
 
@@ -239,16 +226,14 @@ namespace FixedPoint {
         public static bool operator >=(fp a, fp b) {
             return a.value >= b.value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator >=(fp a, int b)
-        {
+        public static bool operator >=(fp a, int b) {
             return a.value >= (long) b << fixlut.PRECISION;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator >=(int a, fp b)
-        {
+        public static bool operator >=(int a, fp b) {
             return (long) a << fixlut.PRECISION >= b.value;
         }
 
@@ -256,16 +241,14 @@ namespace FixedPoint {
         public static bool operator ==(fp a, fp b) {
             return a.value == b.value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator ==(fp a, int b)
-        {
+        public static bool operator ==(fp a, int b) {
             return a.value == (long) b << fixlut.PRECISION;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator ==(int a, fp b)
-        {
+        public static bool operator ==(int a, fp b) {
             return (long) a << fixlut.PRECISION == b.value;
         }
 
@@ -273,48 +256,41 @@ namespace FixedPoint {
         public static bool operator !=(fp a, fp b) {
             return a.value != b.value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator !=(fp a, int b)
-        {
+        public static bool operator !=(fp a, int b) {
             return a.value != (long) b << fixlut.PRECISION;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator !=(int a, fp b)
-        {
+        public static bool operator !=(int a, fp b) {
             return (long) a << fixlut.PRECISION != b.value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator fp(int value)
-        {
+        public static implicit operator fp(int value) {
             fp f;
             f.value = (long) value << fixlut.PRECISION;
             return f;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator int(fp value)
-        {
+        public static explicit operator int(fp value) {
             return (int) (value.value >> fixlut.PRECISION);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator long(fp value)
-        {
+        public static explicit operator long(fp value) {
             return value.value >> fixlut.PRECISION;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator float(fp value)
-        {
+        public static explicit operator float(fp value) {
             return value.value / 65536f;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator double(fp value)
-        {
+        public static explicit operator double(fp value) {
             return value.value / 65536d;
         }
 

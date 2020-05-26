@@ -1,7 +1,12 @@
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace FixedPoint {
+    [StructLayout(LayoutKind.Explicit)]
     public struct Random {
+        public const int SIZE = 4;
+
+        [FieldOffset(0)]
         public uint state;
         
         /// <summary>
