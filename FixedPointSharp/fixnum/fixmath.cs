@@ -61,7 +61,10 @@ namespace FixedPoint {
         public static fp Sin(fp num) {
             num.value %= fp.pi2.value;
             num       *= fp.one_div_pi2;
-            return new fp(fixlut.sin(num.value));
+            var raw = fixlut.sin(num.value);
+            fp result;
+            result.value = raw;
+            return result;
         }
 
         /// <param name="num">Angle in radians</param>
@@ -140,8 +143,8 @@ namespace FixedPoint {
             num.value %= fp.pi2.value;
             num       *= fp.one_div_pi2;
             fixlut.sin_cos(num.value, out var sinVal, out var cosVal);
-            sin = new fp(sinVal);
-            cos = new fp(cosVal);
+            sin.value = sinVal;
+            cos.value = cosVal;
         }
 
         /// <param name="num">Angle in radians</param>
@@ -150,9 +153,9 @@ namespace FixedPoint {
             num.value %= fp.pi2.value;
             num       *= fp.one_div_pi2;
             fixlut.sin_cos_tan(num.value, out var sinVal, out var cosVal, out var tanVal);
-            sin = new fp(sinVal);
-            cos = new fp(cosVal);
-            tan = new fp(tanVal);
+            sin.value = sinVal;
+            cos.value = cosVal;
+            tan.value = tanVal;
         }
 
         public static fp Rcp(fp num) {

@@ -9,8 +9,10 @@
         
 
         public static long sin(long value) {
+            var sign = 1;
             if (value < 0) {
                 value = -value;
+                sign = -1;
             }
 
             var index    = (int) (value >> SHIFT);
@@ -18,7 +20,7 @@
             var a        = SinLut[index];
             var b        = SinLut[index + 1];
             var v2       = a + (((b - a) * fraction) >> PRECISION);
-            return v2;
+            return v2 * sign;
         }
 
         public static long cos(long value) {
@@ -54,8 +56,10 @@
         }
 
         public static void sin_cos(long value, out long sin, out long cos) {
+            var sign = 1;
             if (value < 0) {
                 value = -value;
+                sign = -1;
             }
 
             var index       = (int) (value >> SHIFT);
@@ -67,13 +71,15 @@
             var sinB = SinCosLut[doubleIndex + 2];
             var cosB = SinCosLut[doubleIndex + 3];
 
-            sin = sinA + (((sinB - sinA) * fractions) >> PRECISION);
+            sin = (sinA + (((sinB - sinA) * fractions) >> PRECISION)) * sign;
             cos = cosA + (((cosB - cosA) * fractions) >> PRECISION);
         }
 
         public static void sin_cos_tan(long value, out long sin, out long cos, out long tan) {
+            var sign = 1;
             if (value < 0) {
                 value = -value;
+                sign = -1;
             }
 
             var index       = (int) (value >> SHIFT);
@@ -85,7 +91,7 @@
             var sinB = SinCosLut[doubleIndex + 2];
             var cosB = SinCosLut[doubleIndex + 3];
 
-            sin = sinA + (((sinB - sinA) * fractions) >> PRECISION);
+            sin = (sinA + (((sinB - sinA) * fractions) >> PRECISION)) * sign;
             cos = cosA + (((cosB - cosA) * fractions) >> PRECISION);
             tan = (sin << PRECISION) / cos;
         }

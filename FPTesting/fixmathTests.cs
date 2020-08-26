@@ -197,6 +197,10 @@ namespace FPTesting {
             var value  = fp._0_25;
             var result = fixmath.Sin(value);
             result.AsFloat.Should().BeApproximately(0.247f, 0.001f);
+
+            value = -value;
+            result = fixmath.Sin(value);
+            result.AsFloat.Should().BeApproximately(-0.247f, 0.001f);
         }
 
         [Test]
@@ -204,6 +208,11 @@ namespace FPTesting {
             var value = fp._0_25;
             fixmath.SinCos(value, out var sin, out var cos);
             sin.AsFloat.Should().BeApproximately(0.247f, 0.001f);
+            cos.AsFloat.Should().BeApproximately(0.969f, 0.001f);
+
+            value = -value;
+            fixmath.SinCos(value, out sin, out cos);
+            sin.AsFloat.Should().BeApproximately(-0.247f, 0.001f);
             cos.AsFloat.Should().BeApproximately(0.969f, 0.001f);
         }
 
@@ -214,6 +223,12 @@ namespace FPTesting {
             sin.AsFloat.Should().BeApproximately(0.247f, 0.001f);
             cos.AsFloat.Should().BeApproximately(0.969f, 0.001f);
             tan.AsFloat.Should().BeApproximately(0.255f, 0.001f);
+
+            value = -value;
+            fixmath.SinCosTan(value, out sin, out cos, out tan);
+            sin.AsFloat.Should().BeApproximately(-0.247f, 0.001f);
+            cos.AsFloat.Should().BeApproximately(0.969f, 0.001f);
+            tan.AsFloat.Should().BeApproximately(-0.255f, 0.001f);
         }
         
         [Test]
