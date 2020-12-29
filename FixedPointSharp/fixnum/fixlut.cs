@@ -5,6 +5,7 @@
         public const int  SHIFT           = 16 - 9;
         public const long PI              = 205887L;
         public const long ONE             = 1 << PRECISION;
+        public const long HALF            = 1 << (PRECISION-1);
         public const long ZERO            = 0;
         
 
@@ -29,6 +30,10 @@
             }
 
             value += fp._0_25.value;
+            
+            if (value > 65536) {
+                value -= 65536;
+            }
 
             var index    = (int) (value >> SHIFT);
             var fraction = (value - (index << SHIFT)) << 9;

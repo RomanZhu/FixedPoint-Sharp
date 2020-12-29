@@ -188,10 +188,11 @@ namespace FixedPoint {
 
             return r;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Floor(fp num) {
-            return fp.Parse(num.AsLong);
+            num.value = num.value >> fixlut.PRECISION << fixlut.PRECISION;
+            return num;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -202,9 +203,9 @@ namespace FixedPoint {
                 return num;
             }
 
-            var full = new fp(num.value >> fixlut.PRECISION << fixlut.PRECISION);
-
-            return full + fp._1;
+            num.value = num.value >> fixlut.PRECISION << fixlut.PRECISION;
+            num.value += fixlut.ONE;
+            return num;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -214,9 +215,9 @@ namespace FixedPoint {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int RoundToInt(fp num) {
-            var fraction = new fp(num.value & 0x000000000000FFFFL);
+            var fraction = num.value & 0x000000000000FFFFL;
 
-            if (fraction.value >= fp._0_50.value) {
+            if (fraction >= fixlut.HALF) {
                 return num.AsInt + 1;
             }
 
@@ -264,6 +265,23 @@ namespace FixedPoint {
         public static fp Lerp(fp from, fp to, fp t) {
             t = Clamp01(t);
             return from + (to - from) * t;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp Repeat(fp value, fp length) {
+            return Clamp(value - Floor(value / length) * length, 0, length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp LerpAngle(fp from, fp to, fp t) {
+            var num = Repeat(to - from, fp.pi2);
+            return Lerp(from, from + (num > fp.pi ? num - fp.pi2 : num), t);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp NormalizeRadians(fp angle) {
+            angle.value %= fixlut.PI;
+            return angle;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
