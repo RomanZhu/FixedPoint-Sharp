@@ -31,7 +31,7 @@
 
             value += fp._0_25.value;
             
-            if (value > 65536) {
+            if (value >= 65536) {
                 value -= 65536;
             }
 
