@@ -26,24 +26,6 @@ namespace FPTesting {
         }
 
         [Test]
-        public void Exp_2Test() {
-            var result = fixmath.ExpApproximated(fp._5);
-            result.AsFloat.Should().BeApproximately(148.413f, 0.6f);
-
-            result = fixmath.ExpApproximated(fp._5 + fp._0_33);
-            result.AsFloat.Should().BeApproximately(206.437f, 1f);
-        }
-
-        [Test]
-        public void Pow2Test() {
-            var result = fixmath.Pow2(fp._5);
-            result.AsInt.Should().Be(32);
-
-            result = fixmath.Pow2(fp._10 + fp._0_25);
-            result.AsFloat.Should().BeApproximately(1217f, 2f);
-        }
-
-        [Test]
         public void Atan_2Test() {
             var value  = fp._0_95;
             var result = fixmath.AtanApproximated(value);
@@ -217,21 +199,6 @@ namespace FPTesting {
         }
 
         [Test]
-        public void SinCosTanTest() {
-            var value = fp._0_25;
-            fixmath.SinCosTan(value, out var sin, out var cos, out var tan);
-            sin.AsFloat.Should().BeApproximately(0.247f, 0.001f);
-            cos.AsFloat.Should().BeApproximately(0.969f, 0.001f);
-            tan.AsFloat.Should().BeApproximately(0.255f, 0.001f);
-
-            value = -value;
-            fixmath.SinCosTan(value, out sin, out cos, out tan);
-            sin.AsFloat.Should().BeApproximately(-0.247f, 0.001f);
-            cos.AsFloat.Should().BeApproximately(0.969f, 0.001f);
-            tan.AsFloat.Should().BeApproximately(-0.255f, 0.001f);
-        }
-        
-        [Test]
         public void RcpTest() {
             var value = fp._0_25;
             var result = fixmath.Rcp(value);
@@ -361,12 +328,6 @@ namespace FPTesting {
 
             result = fixmath.IsOppositeSign(-fp._0_25, -fp._0_20);
             result.Should().Be(false);
-        }
-
-        [Test]
-        public void Sin2Test() {
-            fixmath.SinCosTan(fp._0_20, out var sin, out var cos, out var tan);
-            var bbb = sin;
         }
     }
 }

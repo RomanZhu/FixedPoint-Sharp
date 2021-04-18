@@ -38,10 +38,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BigData.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Generator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Writer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FixedPointSharp\FixedPointSharp.csproj">
+      <Project>{20e87959-a8c3-4526-8415-3656d19e6c49}</Project>
+      <Name>FixedPointSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

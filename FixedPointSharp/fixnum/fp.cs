@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace FixedPoint {
     [Serializable]
-    [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Explicit, Size = SIZE)]
     public struct fp : IEquatable<fp>, IComparable<fp> {
         public const int SIZE = 8;
 
@@ -84,7 +84,6 @@ namespace FixedPoint {
             a.value = +a.value;
             return a;
         }
-
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp operator +(fp a, fp b) {

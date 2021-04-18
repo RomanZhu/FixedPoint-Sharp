@@ -80,43 +80,32 @@
             cos = cosA + (((cosB - cosA) * fractions) >> PRECISION);
         }
 
-        public static void sin_cos_tan(long value, out long sin, out long cos, out long tan) {
-            var sign = 1;
+        public static long asin(long value) {
+            bool flag = false;
             if (value < 0) {
+                flag  = true;
                 value = -value;
-                sign = -1;
             }
 
-            var index       = (int) (value >> SHIFT);
-            var doubleIndex = index * 2;
-            var fractions   = (value - (index << SHIFT)) << 9;
-
-            var sinA = SinCosLut[doubleIndex];
-            var cosA = SinCosLut[doubleIndex + 1];
-            var sinB = SinCosLut[doubleIndex + 2];
-            var cosB = SinCosLut[doubleIndex + 3];
-
-            sin = (sinA + (((sinB - sinA) * fractions) >> PRECISION)) * sign;
-            cos = cosA + (((cosB - cosA) * fractions) >> PRECISION);
-            tan = (sin << PRECISION) / cos;
+            var result = AsinLut[value];
+            if (flag)
+                result = -result;
+            return result;
         }
-
+        
         public static long acos(long value) {
-            var index    = (int) (value >> SHIFT);
-            var fraction = (value - (index << SHIFT)) << 9;
-            var a        = AcosLut[index];
-            var b        = AcosLut[index + 1];
-            var v2       = a + (((b - a) * fraction) >> PRECISION);
-            return v2;
-        }
+            bool flag = false;
+            if (value < 0) {
+                flag  = true;
+                value = -value;
+            }
 
-        public static long asin(long value) {
-            var index    = (int) (value >> SHIFT);
-            var fraction = (value - (index << SHIFT)) << 9;
-            var a        = AsinLut[index];
-            var b        = AsinLut[index + 1];
-            var v2       = a + (((b - a) * fraction) >> PRECISION);
-            return v2;
+            long result = -AsinLut[value];
+            if (flag)
+                result = -result;
+
+            result += fp.pi_half.value;
+            return result;
         }
     }
 }

@@ -24,7 +24,7 @@ namespace LUTGenerator {
             {typeof(sbyte), "sbyte"},
         };
 
-        public static void Write(IList list, string fieldName, string fileName) {
+        public static void Write(IList list, string fieldName) {
             EntryIndex    = 0;
             MaxEntryIndex = list.Count - 1;
             Output        = $"{HEADER} {_friendlyNames[list[0].GetType()]}[] {fieldName} = {{";

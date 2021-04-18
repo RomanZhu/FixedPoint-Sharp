@@ -75,38 +75,6 @@ namespace FPTesting {
             plt.AxisAuto();
             plt.SaveFig("Atan2_error.png");
         }
-
-        [Test]
-        public void Pow_Plottting() {
-            var xValues      = new List<double>();
-            var correctValue = new List<double>();
-            var approxValue2 = new List<double>();
-            var approxValueError2 = new List<double>();
-            for (var i = 1; i < 2000; i++) {
-                var val = 24 * i / 2000f;
-                xValues.Add(val);
-            }
- 
-            foreach (var val in xValues) {
-                var correctVal = Math.Pow(2, val);
-                correctValue.Add(correctVal);
-
-                var aprox2Val = fixmath.Pow2(fp.ParseUnsafe((float) val)).AsDouble;
-                approxValue2.Add(aprox2Val);
-                approxValueError2.Add(correctVal - aprox2Val);
-            }
-
-            var plt = new ScottPlot.Plot(2048, 2048);
-            plt.PlotScatter(xValues.ToArray(), correctValue.ToArray(), Color.CadetBlue, 0.01f, 1,  "Math.Pow2");
-            plt.PlotScatter(xValues.ToArray(), approxValue2.ToArray(), Color.FromArgb(82, 178, 67), 0.01f, 1f, "fixmath.Pow2_2");
-            plt.AxisAuto();
-            plt.SaveFig("Pow2.png");
-            
-            plt = new ScottPlot.Plot(2048, 2048);
-            plt.PlotScatter(xValues.ToArray(), approxValueError2.ToArray(), Color.FromArgb(82, 178, 67), 0.01f, 1f, "fixmath.Pow2_2");
-            plt.AxisAuto();
-            plt.SaveFig("Pow2_error.png");
-        }
         
         [Test]
         public void Exp_Plottting() {
@@ -125,10 +93,6 @@ namespace FPTesting {
                 var val        = xValues[i];
                 var correctVal = Math.Exp(val);
                 correctValue.Add(correctVal);
-
-                var aprox2Val = fixmath.ExpApproximated(fp.ParseUnsafe((float) val)).AsDouble;
-                approxValue2.Add(aprox2Val);
-                approxValueError2.Add(correctVal - aprox2Val);
 
                 var aprox3Val = fixmath.Exp(fp.ParseUnsafe((float) val)).AsDouble;
                 approxValue3.Add(aprox3Val);

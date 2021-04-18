@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace FixedPoint {
     [Serializable]
-    [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Explicit, Size = SIZE)]
     public struct fp2 : IEquatable<fp2> {
         public const int SIZE = 16;
 
@@ -183,6 +183,11 @@ namespace FixedPoint {
             int IEqualityComparer<fp2>.GetHashCode(fp2 obj) {
                 return obj.GetHashCode();
             }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public fp2 Normalize() {
+            return fixmath.Normalize(this);
         }
     }
 }

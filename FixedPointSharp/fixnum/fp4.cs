@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace FixedPoint {
-    [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Explicit, Size = SIZE)]
     public struct fp4 : IEquatable<fp4> {
         public const int SIZE = 32;
 

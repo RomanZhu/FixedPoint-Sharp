@@ -64,10 +64,8 @@ namespace FixedPoint
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Dot(fp2 a, fp2 b)
         {
-            fp2 a1 = a;
-            fp2 b1 = b;
-            var x = ((a1.x.value * b1.x.value) >> fixlut.PRECISION);
-            var z = ((a1.y.value * b1.y.value) >> fixlut.PRECISION);
+            var x = ((a.x.value * b.x.value) >> fixlut.PRECISION);
+            var z = ((a.y.value * b.y.value) >> fixlut.PRECISION);
 
             fp r;
 
@@ -326,6 +324,19 @@ namespace FixedPoint
             }
 
             return v1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp2 Normalize(fp2 v, out fp magnitude)
+        {
+            if (v == fp2.zero)
+            {
+                magnitude = fp._0;
+                return fp2.zero;
+            }
+
+            magnitude = Magnitude(v);
+            return v / magnitude;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
