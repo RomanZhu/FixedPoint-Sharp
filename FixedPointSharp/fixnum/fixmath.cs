@@ -36,7 +36,10 @@ namespace FixedPoint {
             if (num.value > 1638400) {
                 return fp.max;
             }
-
+            
+            var isNeg = num.value < 0;
+            if (isNeg) num = -num;
+            
             var i = num.AsInt;
             num =  Fractions(num) * _pow2Number1 + fp._1;
             num *= num;
@@ -46,6 +49,8 @@ namespace FixedPoint {
             num *= num;
             num *= num;
             num *= num;
+            
+            if (isNeg) result = fnum._1 / result;
             return num * num * fp.Parse(1 << i);
         }
 
