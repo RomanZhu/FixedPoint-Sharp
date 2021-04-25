@@ -50,8 +50,9 @@ namespace FixedPoint {
             num *= num;
             num *= num;
             
-            if (isNeg) result = fnum._1 / result;
-            return num * num * fp.Parse(1 << i);
+            var result = num * num * fp.Parse(1 << i);
+            if (isNeg) result = fp._1 / result;
+            return result;
         }
 
         ///Approximate version of Exp
