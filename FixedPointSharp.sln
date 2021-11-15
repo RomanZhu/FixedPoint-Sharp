@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixedPointSharp", "FixedPointSharp\FixedPointSharp.csproj", "{20E87959-A8C3-4526-8415-3656D19E6C49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FPTesting", "FPTesting\FPTesting.csproj", "{69F2B676-5D86-47AA-8DC7-996219496F2C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{69F2B676-5D86-47AA-8DC7-996219496F2C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LUTGenerator", "LUTGenerator\LUTGenerator.csproj", "{49D328B2-A15B-42A7-9C16-B04E160FE7B3}"
 EndProject
