@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace FixedPoint
+namespace Deterministic.FixedPoint
 {
     public partial struct fixmath
     {
@@ -102,7 +102,7 @@ namespace FixedPoint
         {
             var v = target - current;
             var sqrMagnitude = MagnitudeSqr(v);
-            if (v == fp3.zero || maxDelta >= fp.zero && sqrMagnitude <= maxDelta * maxDelta)
+            if (v == fp3.zero || maxDelta >= fp._0 && sqrMagnitude <= maxDelta * maxDelta)
                 return target;
 
             var magnitude = Sqrt(sqrMagnitude);
@@ -117,10 +117,10 @@ namespace FixedPoint
 
             if (n < fp.epsilon)
             {
-                return fp.zero;
+                return fp._0;
             }
 
-            return Acos(Clamp(Dot(a, b) / n, fp.minus_one, fp.one)) * fp.rad2deg;
+            return Acos(Clamp(Dot(a, b) / n, fp.minus_one, fp._1)) * fp.rad2deg;
         }
 
         public static fp AngleSigned(fp3 a, fp3 b, fp3 axis)
@@ -133,46 +133,42 @@ namespace FixedPoint
                         ((axis.y.value * num3) >> fixlut.PRECISION) +
                         ((axis.z.value * num4) >> fixlut.PRECISION)) < 0
                 ? fp.minus_one
-                : fp.one;
+                : fp._1;
             return angle * sign;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Radians(fp3 a, fp3 b)
         {
-            return Acos(Clamp(Dot(Normalize(a), Normalize(b)), fp.minus_one, fp.one));
+            return Acos(Clamp(Dot(Normalize(a), Normalize(b)), fp.minus_one, fp._1));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp RadiansSkipNormalize(fp3 a, fp3 b)
         {
-            return Acos(Clamp(Dot(a, b), fp.minus_one, fp.one));
+            return Acos(Clamp(Dot(a, b), fp.minus_one, fp._1));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp MagnitudeSqr(fp3 v)
         {
-            fp r;
-
-            r.value =
+            v.x.value =
                 ((v.x.value * v.x.value) >> fixlut.PRECISION) +
                 ((v.y.value * v.y.value) >> fixlut.PRECISION) +
                 ((v.z.value * v.z.value) >> fixlut.PRECISION);
 
-            return r;
+            return v.x;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Magnitude(fp3 v)
         {
-            fp r;
-
-            r.value =
+            v.x.value =
                 ((v.x.value * v.x.value) >> fixlut.PRECISION) +
                 ((v.y.value * v.y.value) >> fixlut.PRECISION) +
                 ((v.z.value * v.z.value) >> fixlut.PRECISION);
             
-            return Sqrt(r);
+            return Sqrt(v.x);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -219,7 +215,7 @@ namespace FixedPoint
         {
             if (v == fp3.zero)
             {
-                magnitude = fp.zero;
+                magnitude = fp._0;
                 return fp3.zero;
             }
 

@@ -1,9 +1,9 @@
-using FixedPoint;
+using Deterministic.FixedPoint;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace FPTesting {
-    public class randomTests {
+namespace UnitTests {
+    public class FP_randomTests {
         [Test]
         public void BoolTest()
         {

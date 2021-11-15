@@ -3,26 +3,29 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace FixedPoint {
+namespace Deterministic.FixedPoint {
     [Serializable]
-    [StructLayout(LayoutKind.Explicit, Size = sizeof(long) * 3)]
+    [StructLayout(LayoutKind.Explicit, Size = SIZE)]
     public struct fp3 : IEquatable<fp3> {
-        public static readonly fp3 left     = new fp3(-fp.one, fp.zero, fp.zero);
-        public static readonly fp3 right    = new fp3(+fp.one, fp.zero, fp.zero);
-        public static readonly fp3 up       = new fp3(fp.zero, +fp.one, fp.zero);
-        public static readonly fp3 forward  = new fp3(fp.zero, fp.zero, fp.one);
-        public static readonly fp3 backward = new fp3(fp.zero, fp.zero, fp.minus_one);
-        public static readonly fp3 one = new fp3(fp.one, fp.one, fp.one);
+        public const int SIZE = 24;
+
+        public static readonly fp3 left      = new fp3(-fp._1,       fp._0,        fp._0);
+        public static readonly fp3 right     = new fp3(fp._1,        fp._0,        fp._0);
+        public static readonly fp3 up        = new fp3(fp._0,        fp._1,        fp._0);
+        public static readonly fp3 down      = new fp3(fp._0,        fp.minus_one, fp._0);
+        public static readonly fp3 forward   = new fp3(fp._0,        fp._0,        fp._1);
+        public static readonly fp3 backward  = new fp3(fp._0,        fp._0,        fp.minus_one);
+        public static readonly fp3 one       = new fp3(fp._1,        fp._1,        fp._1);
         public static readonly fp3 minus_one = new fp3(fp.minus_one, fp.minus_one, fp.minus_one);
-        public static readonly fp3 zero     = new fp3(fp.zero, fp.zero, fp.zero);
+        public static readonly fp3 zero      = new fp3(fp._0,        fp._0,        fp._0);
 
         [FieldOffset(0)]
         public fp x;
 
-        [FieldOffset(sizeof(long))]
+        [FieldOffset(8)]
         public fp y;
 
-        [FieldOffset(sizeof(long) * 2)]
+        [FieldOffset(16)]
         public fp z;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -40,66 +43,21 @@ namespace FixedPoint {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal fp3(long x, long y, long z) {
-            this.x.value = x;
-            this.y.value = y;
-            this.z.value = z;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp3 X(fp x) {
-            fp3 r;
-
-            r.x.value = x.value;
-            r.y.value = 0;
-            r.z.value = 0;
-
-            return r;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp3 Y(fp y) {
-            fp3 r;
-
-            r.x.value = 0;
-            r.y.value = y.value;
-            r.z.value = 0;
-
-            return r;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp3 Z(fp z) {
-            fp3 r;
-
-            r.x.value = 0;
-            r.y.value = 0;
-            r.z.value = z.value;
-
-            return r;
-        }
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp3 operator +(fp3 a, fp3 b) {
-            fp3 r;
+            a.x.value += b.x.value;
+            a.y.value += b.y.value;
+            a.z.value += b.z.value;
 
-            r.x.value = a.x.value + b.x.value;
-            r.y.value = a.y.value + b.y.value;
-            r.z.value = a.z.value + b.z.value;
-
-            return r;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp3 operator -(fp3 a, fp3 b) {
-            fp3 r;
+            a.x.value -= b.x.value;
+            a.y.value -= b.y.value;
+            a.z.value -= b.z.value;
 
-            r.x.value = a.x.value - b.x.value;
-            r.y.value = a.y.value - b.y.value;
-            r.z.value = a.z.value - b.z.value;
-
-            return r;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -113,68 +71,56 @@ namespace FixedPoint {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp3 operator *(fp3 a, fp3 b) {
-            fp3 r;
+            a.x.value = (a.x.value * b.x.value) >> fixlut.PRECISION;
+            a.y.value = (a.y.value * b.y.value) >> fixlut.PRECISION;
+            a.z.value = (a.z.value * b.z.value) >> fixlut.PRECISION;
 
-            r.x.value = (a.x.value * b.x.value) >> fixlut.PRECISION;
-            r.y.value = (a.y.value * b.y.value) >> fixlut.PRECISION;
-            r.z.value = (a.z.value * b.z.value) >> fixlut.PRECISION;
-
-            return r;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp3 operator *(fp3 a, fp b) {
-            fp3 r;
+            a.x.value = (a.x.value * b.value) >> fixlut.PRECISION;
+            a.y.value = (a.y.value * b.value) >> fixlut.PRECISION;
+            a.z.value = (a.z.value * b.value) >> fixlut.PRECISION;
 
-            r.x.value = (a.x.value * b.value) >> fixlut.PRECISION;
-            r.y.value = (a.y.value * b.value) >> fixlut.PRECISION;
-            r.z.value = (a.z.value * b.value) >> fixlut.PRECISION;
-
-            return r;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp3 operator *(fp b, fp3 a) {
-            fp3 r;
+            a.x.value = (a.x.value * b.value) >> fixlut.PRECISION;
+            a.y.value = (a.y.value * b.value) >> fixlut.PRECISION;
+            a.z.value = (a.z.value * b.value) >> fixlut.PRECISION;
 
-            r.x.value = (a.x.value * b.value) >> fixlut.PRECISION;
-            r.y.value = (a.y.value * b.value) >> fixlut.PRECISION;
-            r.z.value = (a.z.value * b.value) >> fixlut.PRECISION;
-
-            return r;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp3 operator /(fp3 a, fp3 b) {
-            fp3 r;
+            a.x.value = (a.x.value << fixlut.PRECISION) / b.x.value;
+            a.y.value = (a.y.value << fixlut.PRECISION) / b.y.value;
+            a.z.value = (a.z.value << fixlut.PRECISION) / b.z.value;
 
-            r.x.value = (a.x.value << fixlut.PRECISION) / b.x.value;
-            r.y.value = (a.y.value << fixlut.PRECISION) / b.y.value;
-            r.z.value = (a.z.value << fixlut.PRECISION) / b.z.value;
-
-            return r;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp3 operator /(fp3 a, fp b) {
-            fp3 r;
+            a.x.value = (a.x.value << fixlut.PRECISION) / b.value;
+            a.y.value = (a.y.value << fixlut.PRECISION) / b.value;
+            a.z.value = (a.z.value << fixlut.PRECISION) / b.value;
 
-            r.x.value = (a.x.value << fixlut.PRECISION) / b.value;
-            r.y.value = (a.y.value << fixlut.PRECISION) / b.value;
-            r.z.value = (a.z.value << fixlut.PRECISION) / b.value;
-
-            return r;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp3 operator /(fp b, fp3 a) {
-            fp3 r;
+            a.x.value = (a.x.value << fixlut.PRECISION) / b.value;
+            a.y.value = (a.y.value << fixlut.PRECISION) / b.value;
+            a.z.value = (a.z.value << fixlut.PRECISION) / b.value;
 
-            r.x.value = (a.x.value << fixlut.PRECISION) / b.value;
-            r.y.value = (a.y.value << fixlut.PRECISION) / b.value;
-            r.z.value = (a.z.value << fixlut.PRECISION) / b.value;
-
-            return r;
+            return a;
         }
 
 
@@ -221,6 +167,11 @@ namespace FixedPoint {
             int IEqualityComparer<fp3>.GetHashCode(fp3 obj) {
                 return obj.GetHashCode();
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public fp3 Normalize() {
+            return fixmath.Normalize(this);
         }
     }
 }

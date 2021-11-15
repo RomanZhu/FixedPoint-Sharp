@@ -1,24 +1,24 @@
-﻿using FixedPoint;
+﻿using Deterministic.FixedPoint;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace FPTesting
+namespace UnitTests
 {
-    public class fixmath3Tests
+    public class FP_fixmath3Tests
     {
         [Test]
         public void NormalizationTest()
         {
-            var originalVector = new fp3(fp._5, fp.zero, fp.zero);
+            var originalVector = new fp3(fp._5, fp._0, fp._0);
             var modifiedVector = fixmath.Normalize(originalVector);
 
-            modifiedVector.Should().Be(new fp3(fp.one, fp.zero, fp.zero));
+            modifiedVector.Should().Be(new fp3(fp._1, fp._0, fp._0));
         }
         
         [Test]
         public void MagnitudeTest()
         {
-            var originalVector = new fp3(fp._5, fp.zero, fp.zero);
+            var originalVector = new fp3(fp._5, fp._0, fp._0);
             var magnitude = fixmath.Magnitude(originalVector);
 
             magnitude.Should().Be(fp._5);
@@ -27,7 +27,7 @@ namespace FPTesting
         [Test]
         public void MagnitudeSqrTest()
         {
-            var originalVector = new fp3(fp._5, fp.zero, fp.zero);
+            var originalVector = new fp3(fp._5, fp._0, fp._0);
             var magnitude      = fixmath.MagnitudeSqr(originalVector);
 
             magnitude.Should().Be(fp._5 * fp._5);
@@ -36,7 +36,7 @@ namespace FPTesting
         [Test]
         public void MagnitudeClampTest()
         {
-            var originalVector = new fp3(fp._5, fp.zero, fp.zero);
+            var originalVector = new fp3(fp._5, fp._0, fp._0);
             var clampedVector      = fixmath.MagnitudeClamp(originalVector, fp._1_10);
 
             clampedVector.x.AsFloat.Should().BeApproximately(1.10f, 0.01f);
@@ -47,14 +47,14 @@ namespace FPTesting
         [Test]
         public void DotTest()
         {
-            var vector1 = new fp3(fp._5, fp.zero, fp.zero);
-            var vector2 = new fp3(fp._5, fp.zero, fp.zero);
+            var vector1 = new fp3(fp._5, fp._0, fp._0);
+            var vector2 = new fp3(fp._5, fp._0, fp._0);
             var dot = fixmath.Dot(vector1, vector2);
 
             dot.Should().Be(fp._5 * fp._5);
             
             vector1 = new fp3(fp._1, fp._5, fp._4);
-            vector2 = new fp3(fp._2, fp.zero, fp._1);
+            vector2 = new fp3(fp._2, fp._0, fp._1);
             dot     = fixmath.Dot(vector1, vector2);
 
             dot.Should().Be(fp._6);
@@ -72,13 +72,13 @@ namespace FPTesting
         public void AngleTest()
         {
             var vector1 = new fp3(fp._1, fp._5, fp._4);
-            var vector2 = new fp3(fp._2, fp.zero, fp._1);
+            var vector2 = new fp3(fp._2, fp._0, fp._1);
             var angle     = fixmath.Angle(vector1, vector2);
 
             angle.AsInt.Should().Be(65);
             
             vector1 = new fp3(fp._2, fp._1,   fp._1);
-            vector2 = new fp3(fp._2, fp.zero, fp._1);
+            vector2 = new fp3(fp._2, fp._0, fp._1);
             angle = fixmath.Angle(vector1, vector2);
 
             angle.AsInt.Should().Be(24);
@@ -88,7 +88,7 @@ namespace FPTesting
         public void AngleSignedTest()
         {
             var vector1 = new fp3(fp._1, fp._5,   fp._4);
-            var vector2 = new fp3(fp._2, fp.zero, fp._1);
+            var vector2 = new fp3(fp._2, fp._0, fp._1);
             var angle   = fixmath.AngleSigned(vector1, vector2, fp3.up);
 
             angle.AsInt.Should().Be(65);
@@ -104,13 +104,13 @@ namespace FPTesting
         public void RadiansTest()
         {
             var vector1 = new fp3(fp._1, fp._5,   fp._4);
-            var vector2 = new fp3(fp._2, fp.zero, fp._1);
+            var vector2 = new fp3(fp._2, fp._0, fp._1);
             var angle   = fixmath.Radians(vector1, vector2);
 
             angle.AsInt.Should().Be(1);
             
             vector1 = new fp3(fp._2, fp._1,   fp._1);
-            vector2 = new fp3(fp._2, fp.zero, fp._1);
+            vector2 = new fp3(fp._2, fp._0, fp._1);
             angle   = fixmath.Radians(vector1, vector2);
             
             angle.AsFloat.Should().BeApproximately(0.42f, 0.01f);
@@ -120,7 +120,7 @@ namespace FPTesting
         public void CrossTest()
         {
             var vector1 = new fp3(fp._1, fp._5,   fp._4);
-            var vector2 = new fp3(fp._2, fp.zero, fp._1);
+            var vector2 = new fp3(fp._2, fp._0, fp._1);
             var cross   = fixmath.Cross(vector1, vector2);
 
             cross.Should().Be(new fp3(fp._5, fp._7, -fp._10));
@@ -130,7 +130,7 @@ namespace FPTesting
         public void ReflectTest()
         {
             var vector     = new fp3(fp._5,  fp._0,   fp._5);
-            var normal     = new fp3(-fp._1, fp.zero, fp.zero);
+            var normal     = new fp3(-fp._1, fp._0, fp._0);
             var reflection = fixmath.Reflect(vector, normal);
 
             reflection.Should().Be(new fp3(-fp._5, fp._0, fp._5));
@@ -159,8 +159,8 @@ namespace FPTesting
         [Test]
         public void LerpTest()
         {
-            var @from     = new fp3(fp._5,  fp.zero,   fp._5);
-            var to     = new fp3(fp.zero, fp.zero, fp.zero);
+            var @from     = new fp3(fp._5,  fp._0,   fp._5);
+            var to     = new fp3(fp._0, fp._0, fp._0);
             var lerped = fixmath.Lerp(@from, to, fp._0_50);
 
             lerped.Should().Be(new fp3(fp._2+fp._0_50, fp._0, fp._2 +fp._0_50));
@@ -170,13 +170,13 @@ namespace FPTesting
         public void MoveTowardsTest()
         {
             var current = fp3.one;
-            var target = new fp3(fp._5, fp.one, fp.one);
+            var target = new fp3(fp._5, fp._1, fp._1);
 
-            var step1 = fixmath.MoveTowards(current, target, fp.one);
-            step1.Should().Be(new fp3(fp._2, fp.one, fp.one));
+            var step1 = fixmath.MoveTowards(current, target, fp._1);
+            step1.Should().Be(new fp3(fp._2, fp._1, fp._1));
             
             var step2 = fixmath.MoveTowards(current, target, fp._10);
-            step2.Should().Be(new fp3(fp._5, fp.one, fp.one));
+            step2.Should().Be(new fp3(fp._5, fp._1, fp._1));
         }
     }
 }
