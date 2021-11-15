@@ -1,4 +1,4 @@
-namespace FixedPoint {
+namespace Deterministic.FixedPoint {
     public static partial class fixlut {
         public static readonly int[] SinCosLut = {
             0, 65536, 804, 65531, 1608, 65516, 2412, 65492, 3216, 65457,

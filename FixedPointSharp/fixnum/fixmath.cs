@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace FixedPoint {
+namespace Deterministic.FixedPoint {
     public partial struct fixmath {
         private static readonly fp _atan2Number1 = new fp(-883);
         private static readonly fp _atan2Number2 = new fp(3767);
@@ -12,8 +12,6 @@ namespace FixedPoint {
         private static readonly fp _atan2Number8 = new fp(205887);
         private static readonly fp _atanApproximatedNumber1 = new fp(16036);
         private static readonly fp _atanApproximatedNumber2 = new fp(4345);
-        private static readonly fp _pow2Number1 = new fp(177);
-        private static readonly fp _expNumber1 = new fp(94548);
         private static readonly byte[] _bsrLookup = {0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30, 8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31};
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,31 +27,6 @@ namespace FixedPoint {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int CountLeadingZeroes(uint num) {
             return num == 0 ? 32 : BitScanReverse(num) ^ 31;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Pow2(fp num) {
-            if (num.value > 1638400) {
-                return fp.max;
-            }
-
-            var i = num.AsInt;
-            num =  Fractions(num) * _pow2Number1 + fp._1;
-            num *= num;
-            num *= num;
-            num *= num;
-            num *= num;
-            num *= num;
-            num *= num;
-            num *= num;
-            return num * num * fp.Parse(1 << i);
-        }
-
-        ///Approximate version of Exp
-        /// <param name="num">[0, 24]</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp ExpApproximated(fp num) {
-            return Pow2(num * _expNumber1);
         }
 
         /// <param name="num">Angle in radians</param>
@@ -86,16 +59,12 @@ namespace FixedPoint {
         /// <param name="num">Cos [-1, 1]</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Acos(fp num) {
-            num.value += fixlut.ONE;
-            num       *= fp._0_50;
             return new fp(fixlut.acos(num.value));
         }
 
         /// <param name="num">Sin [-1, 1]</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Asin(fp num) {
-            num.value += fixlut.ONE;
-            num       *= fp._0_50;
             return new fp(fixlut.asin(num.value));
         }
 
@@ -147,24 +116,13 @@ namespace FixedPoint {
             cos.value = cosVal;
         }
 
-        /// <param name="num">Angle in radians</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SinCosTan(fp num, out fp sin, out fp cos, out fp tan) {
-            num.value %= fp.pi2.value;
-            num       *= fp.one_div_pi2;
-            fixlut.sin_cos_tan(num.value, out var sinVal, out var cosVal, out var tanVal);
-            sin.value = sinVal;
-            cos.value = cosVal;
-            tan.value = tanVal;
-        }
-
         public static fp Rcp(fp num) {
-            //(fp.one << 16)
+            //(fp.1 << 16)
             return new fp(4294967296 / num.value);
         }
         
         public static fp Rsqrt(fp num) {
-            //(fp.one << 16)
+            //(fp.1 << 16)
             return new fp(4294967296 / Sqrt(num).value);
         }
 
@@ -188,7 +146,7 @@ namespace FixedPoint {
 
             return r;
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Floor(fp num) {
             num.value = num.value >> fixlut.PRECISION << fixlut.PRECISION;
@@ -228,10 +186,30 @@ namespace FixedPoint {
         public static fp Min(fp a, fp b) {
             return a.value < b.value ? a : b;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Min(int a, int b) {
+            return a < b ? a : b;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long Min(long a, long b) {
+            return a < b ? a : b;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Max(fp a, fp b) {
             return a.value > b.value ? a : b;
+        }
+                
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Max(int a, int b) {
+            return a > b ? a : b;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long Max(long a, long b) {
+            return a > b ? a : b;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -251,6 +229,16 @@ namespace FixedPoint {
 
             return num;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Clamp(int num, int min, int max) {
+            return num < min ? min : num > max ? max : num;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long Clamp(long num, long min, long max) {
+            return num < min ? min : num > max ? max : num;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Clamp01(fp num) {
@@ -265,6 +253,11 @@ namespace FixedPoint {
         public static fp Lerp(fp from, fp to, fp t) {
             t = Clamp01(t);
             return from + (to - from) * t;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fbool Lerp(fbool from, fbool to, fp t) {
+            return t.value > fp._0_50.value ? to : from;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -322,7 +315,7 @@ namespace FixedPoint {
             var term   = num;
 
             for (var i = 2; i < 30; i++) {
-                term   *= num / fp.Parse(i);
+                term   *= num / (fp)i;
                 result += term;
 
                 if (term.value < 500 && ((i > 15) || (term.value < 20)))

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace FixedPoint
+namespace Deterministic.FixedPoint
 {
     public partial struct fixmath
     {
@@ -152,27 +152,23 @@ namespace FixedPoint
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp MagnitudeSqr(fp3 v)
         {
-            fp r;
-
-            r.value =
+            v.x.value =
                 ((v.x.value * v.x.value) >> fixlut.PRECISION) +
                 ((v.y.value * v.y.value) >> fixlut.PRECISION) +
                 ((v.z.value * v.z.value) >> fixlut.PRECISION);
 
-            return r;
+            return v.x;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Magnitude(fp3 v)
         {
-            fp r;
-
-            r.value =
+            v.x.value =
                 ((v.x.value * v.x.value) >> fixlut.PRECISION) +
                 ((v.y.value * v.y.value) >> fixlut.PRECISION) +
                 ((v.z.value * v.z.value) >> fixlut.PRECISION);
             
-            return Sqrt(r);
+            return Sqrt(v.x);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

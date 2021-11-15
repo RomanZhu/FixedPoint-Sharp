@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace FixedPoint {
+namespace Deterministic.FixedPoint {
     [Serializable]
-    [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Explicit, Size = SIZE)]
     public struct fp2 : IEquatable<fp2> {
         public const int SIZE = 16;
 
-        public static readonly fp2 left  = new fp2(-fp._1, fp._0);
-        public static readonly fp2 right = new fp2(+fp._1, fp._0);
-        public static readonly fp2 up    = new fp2(fp._0, +fp._1);
-        public static readonly fp2 down  = new fp2(fp._0, -fp._1);
-        public static readonly fp2 one = new fp2(fp._1, fp._1);
+        public static readonly fp2 left      = new fp2(-fp._1,       fp._0);
+        public static readonly fp2 right     = new fp2(fp._1,        fp._0);
+        public static readonly fp2 up        = new fp2(fp._0,        fp._1);
+        public static readonly fp2 down      = new fp2(fp._0,        -fp._1);
+        public static readonly fp2 one       = new fp2(fp._1,        fp._1);
         public static readonly fp2 minus_one = new fp2(fp.minus_one, fp.minus_one);
-        public static readonly fp2 zero  = new fp2(fp._0, fp._0);
+        public static readonly fp2 zero      = new fp2(fp._0,        fp._0);
 
         [FieldOffset(0)]
         public fp x;
@@ -30,49 +30,18 @@ namespace FixedPoint {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal fp2(long x, long y) {
-            this.x.value = x;
-            this.y.value = y;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp2 X(fp x) {
-            fp2 r;
-
-            r.x.value = x.value;
-            r.y.value = 0;
-
-            return r;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp2 Y(fp y) {
-            fp2 r;
-
-            r.x.value = 0;
-            r.y.value = y.value;
-
-            return r;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp2 operator +(fp2 a, fp2 b) {
-            fp2 r;
-
-            r.x.value = a.x.value + b.x.value;
-            r.y.value = a.y.value + b.y.value;
-
-            return r;
+            a.x.value += b.x.value;
+            a.y.value += b.y.value;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp2 operator -(fp2 a, fp2 b) {
-            fp2 r;
+            a.x.value -= b.x.value;
+            a.y.value -= b.y.value;
 
-            r.x.value = a.x.value - b.x.value;
-            r.y.value = a.y.value - b.y.value;
-
-            return r;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -85,62 +54,50 @@ namespace FixedPoint {
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp2 operator *(fp2 a, fp2 b) {
-            fp2 r;
+            a.x.value = (a.x.value * b.x.value) >> fixlut.PRECISION;
+            a.y.value = (a.y.value * b.y.value) >> fixlut.PRECISION;
 
-            r.x.value = (a.x.value * b.x.value) >> fixlut.PRECISION;
-            r.y.value = (a.y.value * b.y.value) >> fixlut.PRECISION;
-
-            return r;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp2 operator *(fp2 a, fp b) {
-            fp2 r;
+            a.x.value = (a.x.value * b.value) >> fixlut.PRECISION;
+            a.y.value = (a.y.value * b.value) >> fixlut.PRECISION;
 
-            r.x.value = (a.x.value * b.value) >> fixlut.PRECISION;
-            r.y.value = (a.y.value * b.value) >> fixlut.PRECISION;
-
-            return r;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp2 operator *(fp b, fp2 a) {
-            fp2 r;
+            a.x.value = (a.x.value * b.value) >> fixlut.PRECISION;
+            a.y.value = (a.y.value * b.value) >> fixlut.PRECISION;
 
-            r.x.value = (a.x.value * b.value) >> fixlut.PRECISION;
-            r.y.value = (a.y.value * b.value) >> fixlut.PRECISION;
-
-            return r;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp2 operator /(fp2 a, fp2 b) {
-            fp2 r;
+            a.x.value = (a.x.value << fixlut.PRECISION) / b.x.value;
+            a.y.value = (a.y.value << fixlut.PRECISION) / b.y.value;
 
-            r.x.value = (a.x.value << fixlut.PRECISION) / b.x.value;
-            r.y.value = (a.y.value << fixlut.PRECISION) / b.y.value;
-
-            return r;
+            return a;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp2 operator /(fp2 a, fp b) {
-            fp2 r;
+            a.x.value = (a.x.value << fixlut.PRECISION) / b.value;
+            a.y.value = (a.y.value << fixlut.PRECISION) / b.value;
 
-            r.x.value = (a.x.value << fixlut.PRECISION) / b.value;
-            r.y.value = (a.y.value << fixlut.PRECISION) / b.value;
-
-            return r;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp2 operator /(fp b, fp2 a) {
-            fp2 r;
+            a.x.value = (a.x.value << fixlut.PRECISION) / b.value;
+            a.y.value = (a.y.value << fixlut.PRECISION) / b.value;
 
-            r.x.value = (a.x.value << fixlut.PRECISION) / b.value;
-            r.y.value = (a.y.value << fixlut.PRECISION) / b.value;
-
-            return r;
+            return a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -183,6 +140,21 @@ namespace FixedPoint {
             int IEqualityComparer<fp2>.GetHashCode(fp2 obj) {
                 return obj.GetHashCode();
             }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public fp2 Normalize() {
+            return fixmath.Normalize(this);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public fp Magnitude() {
+            return fixmath.Magnitude(this);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public fp MagnitudeSqr() {
+            return fixmath.MagnitudeSqr(this);
         }
     }
 }

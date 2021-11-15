@@ -1,8 +1,8 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace FixedPoint {
-    [StructLayout(LayoutKind.Explicit)]
+namespace Deterministic.FixedPoint {
+    [StructLayout(LayoutKind.Explicit, Size = SIZE)]
     public struct Random {
         public const int SIZE = 4;
 

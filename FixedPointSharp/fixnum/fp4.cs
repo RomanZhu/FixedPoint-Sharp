@@ -2,8 +2,8 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace FixedPoint {
-    [StructLayout(LayoutKind.Explicit)]
+namespace Deterministic.FixedPoint {
+    [StructLayout(LayoutKind.Explicit, Size = SIZE)]
     public struct fp4 : IEquatable<fp4> {
         public const int SIZE = 32;
 
@@ -20,7 +20,7 @@ namespace FixedPoint {
         public fp w;
 
         public static readonly fp4 zero;
-        public static readonly fp4 one = new fp4 {x = fp._1, y = fp._1, z = fp._1, w = fp._1};
+        public static readonly fp4 one       = new fp4 {x = fp._1, y        = fp._1, z        = fp._1, w        = fp._1};
         public static readonly fp4 minus_one = new fp4 {x = fp.minus_one, y = fp.minus_one, z = fp.minus_one, w = fp.minus_one};
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

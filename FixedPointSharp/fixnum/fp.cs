@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace FixedPoint {
+namespace Deterministic.FixedPoint {
     [Serializable]
-    [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Explicit, Size = SIZE)]
     public struct fp : IEquatable<fp>, IComparable<fp> {
         public const int SIZE = 8;
 
@@ -85,7 +85,6 @@ namespace FixedPoint {
             return a;
         }
 
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp operator +(fp a, fp b) {
             a.value += b.value;
@@ -125,7 +124,7 @@ namespace FixedPoint {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp operator *(fp a, fp b) {
-            a.value = (a.value * b.value) >> fixlut.PRECISION;
+            a.value = a.value * b.value >> fixlut.PRECISION;
             return a;
         }
 
@@ -334,6 +333,62 @@ namespace FixedPoint {
             var doubleValue = double.Parse(value, CultureInfo.InvariantCulture);
             var longValue   = (long) (doubleValue * fixlut.ONE + 0.5d * (doubleValue < 0 ? -1 : 1));
             return new fp(longValue);
+        }
+
+        /// <summary>
+        /// Deterministically parses FP value out of a string
+        /// </summary>
+        /// <param name="value">Trimmed string to parse</param>
+        public static fp Parse(string value) {
+            if (string.IsNullOrEmpty(value))
+            {
+                return _0;
+            }
+            
+            bool negative;
+
+            var startIndex = 0;
+            if (negative = (value[0] == '-')) {
+                startIndex = 1;
+            }
+
+            var pointIndex = value.IndexOf('.');
+            if (pointIndex < startIndex) {
+                if (startIndex == 0) {
+                    return ParseInteger(value);
+                }
+
+                return -ParseInteger(value.Substring(startIndex, value.Length - startIndex));
+
+            }
+
+            var result = new fp();
+            
+            if (pointIndex > startIndex) {
+                var integerString = value.Substring(startIndex, pointIndex - startIndex);
+                result += ParseInteger(integerString);
+            }
+
+
+            if (pointIndex == value.Length - 1) {
+                return negative ? -result : result;
+            }
+
+            var fractionString = value.Substring(pointIndex + 1, value.Length - pointIndex - 1);
+            if (fractionString.Length > 0) {
+                result += ParseFractions(fractionString);
+            }
+
+            return negative ? -result : result;
+        }
+        
+        private static fp ParseInteger(string format) {
+            return Parse(long.Parse(format, CultureInfo.InvariantCulture));
+        }
+
+        private static fp ParseFractions(string format) {
+            format = format.Length < 5 ? format.PadRight(5, '0') : format.Substring(0, 5);
+            return ParseRaw(long.Parse(format, CultureInfo.InvariantCulture) * 65536 / 100000);
         }
 
         public class Comparer : IComparer<fp> {

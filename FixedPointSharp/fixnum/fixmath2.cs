@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace FixedPoint
+namespace Deterministic.FixedPoint
 {
     public partial struct fixmath
     {
@@ -12,25 +12,8 @@ namespace FixedPoint
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp2 Min(fp2 a, fp2 b)
         {
-            fp ret;
-            if (a.x.value < b.x.value)
-            {
-                ret = a.x;
-            }
-            else
-            {
-                ret = b.x;
-            }
-
-            fp ret1;
-            if (a.y.value < b.y.value)
-            {
-                ret1 = a.y;
-            }
-            else
-            {
-                ret1 = b.y;
-            }
+            var ret  = a.x.value < b.x.value ? a.x : b.x;
+            var ret1 = a.y.value < b.y.value ? a.y : b.y;
 
             return new fp2(ret, ret1);
         }
@@ -38,48 +21,22 @@ namespace FixedPoint
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp2 Max(fp2 a, fp2 b)
         {
-            fp ret;
-            if (a.x.value > b.x.value)
-            {
-                ret = a.x;
-            }
-            else
-            {
-                ret = b.x;
-            }
-
-            fp ret1;
-            if (a.y.value > b.y.value)
-            {
-                ret1 = a.y;
-            }
-            else
-            {
-                ret1 = b.y;
-            }
-
+            var ret  = a.x.value > b.x.value ? a.x : b.x;
+            var ret1 = a.y.value > b.y.value ? a.y : b.y;
             return new fp2(ret, ret1);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp Dot(fp2 a, fp2 b)
         {
-            fp2 a1 = a;
-            fp2 b1 = b;
-            var x = ((a1.x.value * b1.x.value) >> fixlut.PRECISION);
-            var z = ((a1.y.value * b1.y.value) >> fixlut.PRECISION);
-
-            fp r;
-
-            r.value = x + z;
-
-            return r;
+            a.x.value = ((a.x.value * b.x.value) >> fixlut.PRECISION) + ((a.y.value * b.y.value) >> fixlut.PRECISION);
+            return a.x;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp Cross(fp2 a, fp2 b)
-        {
-            return (a.x * b.y) - (a.y * b.x);
+        public static fp Cross(fp2 a, fp2 b) {
+            a.x.value = (a.x.value * b.y.value >> fixlut.PRECISION) - (a.y.value * b.x.value >> fixlut.PRECISION);
+            return a.x;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -89,9 +46,11 @@ namespace FixedPoint
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static fp2 Cross(fp s, fp2 a)
-        {
-            return new fp2(-s * a.y, s * a.x);
+        public static fp2 Cross(fp s, fp2 a) {
+            fp2 result;
+            result.x.value = -s.value * a.y.value >> fixlut.PRECISION;
+            result.y.value = s.value * a.x.value >> fixlut.PRECISION;
+            return result;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -103,32 +62,16 @@ namespace FixedPoint
             {
                 r.x = min.x;
             }
-            else
-            {
-                if (num.x.value > max.x.value)
-                {
-                    r.x = max.x;
-                }
-                else
-                {
-                    r.x = num.x;
-                }
+            else {
+                r.x = num.x.value > max.x.value ? max.x : num.x;
             }
 
             if (num.y.value < min.y.value)
             {
                 r.y = min.y;
             }
-            else
-            {
-                if (num.y.value > max.y.value)
-                {
-                    r.y = max.y;
-                }
-                else
-                {
-                    r.y = num.y;
-                }
+            else {
+                r.y = num.y.value > max.y.value ? max.y : num.y;
             }
 
             return r;
@@ -227,13 +170,11 @@ namespace FixedPoint
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static fp MagnitudeSqr(fp2 v)
         {
-            fp r;
-
-            r.value =
+            v.x.value =
                 ((v.x.value * v.x.value) >> fixlut.PRECISION) +
                 ((v.y.value * v.y.value) >> fixlut.PRECISION);
 
-            return r;
+            return v.x;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -278,9 +219,8 @@ namespace FixedPoint
             var x = a.x.value - b.x.value;
             var z = a.y.value - b.y.value;
 
-            fp r;
-            r.value = ((x * x) >> fixlut.PRECISION) + ((z * z) >> fixlut.PRECISION);
-            return r;
+            a.x.value = ((x * x) >> fixlut.PRECISION) + ((z * z) >> fixlut.PRECISION);
+            return a.x;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -326,6 +266,19 @@ namespace FixedPoint
             }
 
             return v1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static fp2 Normalize(fp2 v, out fp magnitude)
+        {
+            if (v == fp2.zero)
+            {
+                magnitude = fp._0;
+                return fp2.zero;
+            }
+
+            magnitude = Magnitude(v);
+            return v / magnitude;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -437,16 +390,8 @@ namespace FixedPoint
             {
                 ret = min;
             }
-            else
-            {
-                if (dot.value > max.value)
-                {
-                    ret = max;
-                }
-                else
-                {
-                    ret = dot;
-                }
+            else {
+                ret = dot.value > max.value ? max : dot;
             }
 
             return new fp(fixlut.acos(ret.value)) * fp.rad2deg;
@@ -698,16 +643,8 @@ namespace FixedPoint
             {
                 ret = min;
             }
-            else
-            {
-                if (dot.value > max.value)
-                {
-                    ret = max;
-                }
-                else
-                {
-                    ret = dot;
-                }
+            else {
+                ret = dot.value > max.value ? max : dot;
             }
 
             return new fp(fixlut.acos(ret.value));

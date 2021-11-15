@@ -1,10 +1,10 @@
-﻿using FixedPoint;
+﻿using Deterministic.FixedPoint;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace FPTesting
+namespace UnitTests
 {
-    public class fixmath3Tests
+    public class FP_fixmath3Tests
     {
         [Test]
         public void NormalizationTest()
